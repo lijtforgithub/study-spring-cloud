@@ -1,0 +1,23 @@
+server:
+  port: 8760
+
+spring:
+  application:
+    name: eurka-server
+
+eureka:
+  instance:
+    # 主机名
+    hostname: ${HOSTNAME:localhost}
+    # 实例ID，instance-id是Eureka服务的唯一标记，主要用于区分同一服务集群的不同实例。
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    metadata-map:
+      creator: '李敬堂'
+  client:
+    # 是否将自己注册到Eureka Server,默认为true，由于当前就是server，故而设置成false，表明该服务不会向eureka注册自己的信息
+    register-with-eureka: false
+    # 是否从eureka server获取注册信息，由于单节点，不需要同步其他节点数据，用false
+    fetch-registry: false
+    # 设置服务注册中心的URL，用于client和server端交流
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

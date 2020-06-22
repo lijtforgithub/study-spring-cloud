@@ -8,7 +8,5 @@ eureka:
   client:
     # 是否将自己注册到Eureka Server,默认为true，由于当前就是server，故而设置成false，表明该服务不会向eureka注册自己的信息
     register-with-eureka: true
-    # 是否从eureka server获取注册信息，由于单节点，不需要同步其他节点数据，用false
-    fetch-registry: true
     service-url:
       defaultZone: http://eureka01.com:8761/eureka/,http://eureka02.com:8762/eureka/

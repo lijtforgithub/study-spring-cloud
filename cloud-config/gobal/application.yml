@@ -1,0 +1,20 @@
+eureka:
+  instance:
+    # 主机名
+    hostname: ${HOSTNAME:localhost}
+    # 实例ID，instance-id是Eureka服务的唯一标记，主要用于区分同一服务集群的不同实例。
+    instance-id: ${eureka.instance.hostname}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8760/eureka/
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'

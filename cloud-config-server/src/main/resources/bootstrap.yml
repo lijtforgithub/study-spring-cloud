@@ -10,7 +10,7 @@ spring:
       server:
         git:
           uri: https://github.com/lijtforgithub/study-spring-cloud/cloud-config
-          searchPaths: 'global,{application}'
+          searchPaths: '/global/,/{application}/'
           username: lijtforgithub
           password: githubofljt0828
           

@@ -1,18 +1,16 @@
-server:
-  port: 8008
-
 spring:
   application:
     name: config-server
   cloud:
     config:
+      # 指定Config Server（远端配置服务器的地址）地址，应用启动或者应用刷新配置项使用
+      uri: http://localhost:${server.port}
       label: master
       server:
+        # 是否启动从仓库中拉取配置中心服务端的配置信息 bootstrap.yml才有效
+        bootstrap: true
         git:
-          uri: https://github.com/lijtforgithub/study-spring-cloud/cloud-config
-          searchPaths: '/global/,/{application}/'
+          uri: https://github.com/lijtforgithub/study-spring-cloud
+          searchPaths: '/cloud-config/global/,/cloud-config/{application}/'
           username: lijtforgithub
           password: githubofljt0828
-          
-
-      

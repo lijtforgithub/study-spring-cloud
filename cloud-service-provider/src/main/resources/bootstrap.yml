@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cloud-service-provider
+  cloud:
+    config:
+      label: master
+      uri: http://localhost:8888
+#      discovery:
+#        enabled: true
+#        serviceId: cloud-config-server
+eureka:
+  client:
+    # 在client端配置：将自己真正的健康状态传播到server
+    healthcheck:
+      enabled: true

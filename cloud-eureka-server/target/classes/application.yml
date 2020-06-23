@@ -9,8 +9,8 @@ eureka:
   instance:
     # 主机名
     hostname: ${HOSTNAME:localhost}
-    # 实例ID，instance-id是Eureka服务的唯一标记，主要用于区分同一服务集群的不同实例。
-    instance-id: ${eureka.instance.hostname}:${server.port}
+    # 服务之间调用时如果为true,则优先使用IP地址进行调用，否则使用主机名eureka.instance.hostname进行调用，默认false
+#    prefer-ip-address: true
     metadata-map:
       creator: '李敬堂'
   client:

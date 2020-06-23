@@ -2,20 +2,20 @@ package com.ljt.study.cloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.cloud.config.server.EnableConfigServer;
 
 /**
- * 注册中心服务端
+ * 配置中心服务端
  *
  * @author LiJingTang
- * @date 2020-06-22 13:54
+ * @date 2020-06-23 10:45
  */
-@EnableEurekaServer
 @SpringBootApplication
-public class EurekaServer {
+@EnableConfigServer
+public class ConfigServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(EurekaServer.class, args);
+        SpringApplication.run(ConfigServer.class, args);
     }
     
 }

@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: cloud-service-consumer
+
+feign:
+  hystrix:
+    # 开启熔断器功能
+    enabled: true

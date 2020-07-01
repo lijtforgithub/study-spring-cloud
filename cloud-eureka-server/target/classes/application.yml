@@ -21,3 +21,6 @@ eureka:
     # 设置服务注册中心的URL，用于client和server端交流
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 是否开启自我保护
+    enable-self-preservation: false

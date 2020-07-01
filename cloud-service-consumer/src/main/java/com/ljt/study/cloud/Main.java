@@ -5,6 +5,7 @@ import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.RandomRule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +19,7 @@ import java.util.Collections;
  * @date 2020-06-30 18:34
  */
 @EnableFeignClients
+//@EnableHystrix
 @SpringBootApplication
 public class Main {
 
@@ -25,7 +27,11 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
+    /**
+     * RestTemplate 加上了注解 @LoadBalanced 只能根据实例Id去请求 不能根据IP地址
+     */
     @Bean
+    @LoadBalanced
     public RestTemplate restTemplate() {
         final RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(Collections.singletonList(new LogClientHttpRequestInterceptor()));

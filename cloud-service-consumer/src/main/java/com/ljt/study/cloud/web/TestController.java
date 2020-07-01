@@ -1,6 +1,5 @@
 package com.ljt.study.cloud.web;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
  * @author LiJingTang
  * @date 2020-06-30 18:40
  */
-@Slf4j
 @RestController
 @RequestMapping("/test")
 public class TestController {

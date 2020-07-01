@@ -1,5 +1,6 @@
 package com.ljt.study.cloud;
 
+import com.ljt.study.cloud.interceptor.LogClientHttpRequestInterceptor;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.RandomRule;
 import org.springframework.boot.SpringApplication;
@@ -7,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
 
 /**
  * 服务消费
@@ -24,7 +27,9 @@ public class Main {
 
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setInterceptors(Collections.singletonList(new LogClientHttpRequestInterceptor()));
+        return restTemplate;
     }
 
     @Bean

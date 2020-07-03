@@ -3,14 +3,14 @@ server:
 
 spring:
   application:
-    name: cloud-zuul
+    name: zuul
 
 zuul:
   routes:
     api-service:
-      path: /service/**
-      serviceId: cloud-service-service
+      path: /provider/**
+      serviceId: service-provider
     api-consumer:
       path: /consumer/**
-      serviceId: cloud-service-consumer
+      serviceId: service-consumer
 #  ignored-services:

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cloud-service-provider
+    name: service-provider
   cloud:
     config:
       label: master

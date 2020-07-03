@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: cloud-service-consumer
+    name: service-consumer
 
 ribbon:
   # 默认2000，单位毫秒，连接建立超时时间

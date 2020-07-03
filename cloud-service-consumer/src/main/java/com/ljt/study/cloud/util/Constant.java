@@ -8,6 +8,6 @@ public class Constant {
 
     private Constant() {}
 
-    public static final String PROVIDER = "CLOUD-SERVICE-PROVIDER";
+    public static final String PROVIDER = "SERVICE-PROVIDER";
 
 }

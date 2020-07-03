@@ -5,7 +5,30 @@ spring:
   application:
     name: cloud-service-consumer
 
+ribbon:
+  # 默认2000，单位毫秒，连接建立超时时间
+  ConnectTimeout: 3000
+  # 默认5000，单位毫秒，读取数据超时时间
+  ReadTimeout: 10000
+  # 默认false，是否对所有操作在失败时进行重试，特殊服务(比如订单，减库存，扣款等操作)可能不允许重试
+  # true:允许重试(和MaxAutoRetries，MaxAutoRetriesNextServer配合使用)
+  # false:禁止重试
+  OkToRetryOnAllOperations: true
+  # 默认0，单个实例(单个pod)重试次数(除去第一次）
+  MaxAutoRetries: 1
+  # 默认1，单个服务（例如：构建服务，一个服务有多个实例）重试次数(除去第一个服务实例）
+  MaxAutoRetriesNextServer: 1
+
 feign:
   hystrix:
     # 开启熔断器功能
     enabled: true
+
+# http://localhost:8088/actuator/hystrix.stream
+# http://localhost:8088/hystrix
+hystrix:
+  command:
+    # default配置全局HystrixCommand，断路器配置(详见HystrixCommandProperties)
+    default:
+      # 默认THREAD,断路器隔离策略，有 THREAD(线程) 和 SEMAPHORE(信号量) 两种可选
+      execution.isolation.strategy: SEMAPHORE

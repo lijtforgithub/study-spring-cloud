@@ -6,6 +6,8 @@ import com.netflix.loadbalancer.RandomRule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -18,8 +20,9 @@ import java.util.Collections;
  * @author LiJingTang
  * @date 2020-06-30 18:34
  */
+@EnableHystrix
+@EnableHystrixDashboard
 @EnableFeignClients
-//@EnableHystrix
 @SpringBootApplication
 public class Main {
 

@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cloud-zuul
+
+zuul:
+  routes:
+    api-service:
+      path: /service/**
+      serviceId: cloud-service-service
+    api-consumer:
+      path: /consumer/**
+      serviceId: cloud-service-consumer
+#  ignored-services:

@@ -18,3 +18,10 @@ management:
     web:
       exposure:
         include: '*'
+
+spring:
+  zipkin:
+    base-url: http://127.0.0.1:9411
+  sleuth:
+    sampler:
+      percentage: 1.0

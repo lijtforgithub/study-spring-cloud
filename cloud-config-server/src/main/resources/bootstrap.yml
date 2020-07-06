@@ -3,16 +3,21 @@ spring:
     name: config-server
   cloud:
     config:
+      failFast: true
       # 指定Config Server（远端配置服务器的地址）地址，应用启动或者应用刷新配置项使用
       uri: http://localhost:${server.port}
       label: master
       server:
         # 是否启动从仓库中拉取配置中心服务端的配置信息 bootstrap.yml才有效
         bootstrap: true
-        git:
-          uri: https://github.com/lijtforgithub/study-spring-cloud.git
-          searchPaths: '/cloud-config/global/,/cloud-config/{application}/'
-          username: lijtforgithub
-          password: githubofljt0828
-  rabbitmq:
-    addresses: localhost
+#        git:
+#          uri: https://github.com/lijtforgithub/study-spring-cloud.git
+#          searchPaths: '/cloud-config/global/,/cloud-config/{application}/'
+#          username: lijtforgithub
+#          password: githubofljt0828
+        native:
+          search-locations: '${path}global/,${path}{application}/'
+  profiles:
+    active: native
+# git网络不好 读取本地
+path: 'D:/WorkSpace/Study/study-spring-cloud/cloud-config/'

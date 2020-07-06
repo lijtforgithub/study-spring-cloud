@@ -1,0 +1,13 @@
+server:
+  port: 8008
+# 高并发方案 JWT + Token
+spring:
+  application:
+    name: security-server
+  security:
+    # 所有以”/actuator/**“开头的url放行无需登录
+    authorize-requests:
+      - /actuator/** = permitAll
+    user:
+      name: lijt
+      password: lijt

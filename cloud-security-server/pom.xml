@@ -12,7 +12,7 @@
 	    <version>1.0.0-SNAPSHOT</version>
 	</parent>
   
-  	<artifactId>cloud-service-provider</artifactId>
+  	<artifactId>cloud-security-server</artifactId>
   	<packaging>jar</packaging>
   	
   	<name>${project.artifactId}</name>
@@ -24,14 +24,9 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.ljt.study</groupId>
-			<artifactId>cloud-service-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
         </dependency>
-    </dependencies>
+	 </dependencies>
 	 
 </project>

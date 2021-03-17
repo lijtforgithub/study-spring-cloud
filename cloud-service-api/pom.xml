@@ -4,35 +4,21 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ljt.study</groupId>
+    <parent>
+        <groupId>com.ljt.study</groupId>
+        <artifactId>cloud-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <artifactId>cloud-service-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
     <name>${project.artifactId}</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <skip.maven.deploy>true</skip.maven.deploy>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.2.5.RELEASE</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

@@ -14,7 +14,7 @@ public class ServiceFeignClientFallbackFactory implements FallbackFactory<Servic
     @Override
     public ServiceFeignClient create(Throwable cause) {
         cause.printStackTrace();
-        /**
+        /*
          * 兜底数据
          */
         return () -> {

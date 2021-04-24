@@ -82,6 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .withUser(user());
     }
 
+    /**
+     * 及时清理过期的session
+     */
     @Bean
     HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();

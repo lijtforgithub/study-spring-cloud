@@ -14,10 +14,11 @@ spring:
 #          uri: https://github.com/lijtforgithub/study-spring-cloud.git
 #          searchPaths: '/cloud-config/global/,/cloud-config/{application}/'
 #          username: lijtforgithub
-#          password: githubofljt0828
+#          password: ******
         native:
-          search-locations: '${path}global/,${path}{application}/'
+          search-locations: '${native-path}global/,${native-path}{application}/'
   profiles:
     active: native
+
 # git网络不好 读取本地
-path: 'D:/WorkSpace/Study/study-spring-cloud/cloud-config/'
+native-path: 'D:/WorkSpace/Study/study-spring-cloud/cloud-config/'

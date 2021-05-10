@@ -3,7 +3,6 @@ spring:
     name: service-provider
   cloud:
     config:
-      label: master
       uri: http://localhost:8888
 # 放在application.yml 可用
 #      discovery:

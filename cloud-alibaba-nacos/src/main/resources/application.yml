@@ -1,0 +1,15 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: alibaba-nacos
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        group: study-test
+      config:
+        file-extension: yaml
+        shared-configs:
+          - da

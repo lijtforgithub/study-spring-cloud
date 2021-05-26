@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +26,6 @@ public class RegistryController {
 
     @Autowired
     private DiscoveryClient client;
-    @Autowired
-    private EurekaDiscoveryClient eurekaClient;
 
     @GetMapping("/apps")
     public List<String> findApps() {

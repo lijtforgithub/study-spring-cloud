@@ -1,0 +1,5 @@
+# 测试配置项优先级
+priority:
+  application: application.yml 中的值
+  remote: application.yml 中的值
+  arg: application.yml 中的值

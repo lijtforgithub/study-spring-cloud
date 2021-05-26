@@ -4,21 +4,30 @@ spring:
   cloud:
     config:
       failFast: true
-      # 指定Config Server（远端配置服务器的地址）地址，应用启动或者应用刷新配置项使用
-      uri: http://localhost:${server.port}
       label: master
+      # 指定Config Server（远端配置服务器的地址）地址 应用启动或者应用刷新配置项使用
+      uri: http://localhost:${server.port}
       server:
         # 是否启动从仓库中拉取配置中心服务端的配置信息 bootstrap.yml才有效
         bootstrap: true
 #        git:
 #          uri: https://github.com/lijtforgithub/study-spring-cloud.git
-#          searchPaths: '/cloud-config/global/,/cloud-config/{application}/'
+#          searchPaths: /cloud-config/global/,/cloud-config/{application}/
 #          username: lijtforgithub
 #          password: ******
         native:
-          search-locations: '${native-path}global/,${native-path}{application}/'
+          search-locations: ${native-path}global/,${native-path}{application}/
+      allow-override: false
+      override-none: false
+      override-system-properties: false
   profiles:
     active: native
 
 # git网络不好 读取本地
-native-path: 'D:/WorkSpace/Study/study-spring-cloud/cloud-config/'
+native-path: D:/WorkSpace/Study/study-spring-cloud/cloud-config/
+
+priority:
+  bootstrap: bootstrap.yml 中的默认值
+  application: bootstrap.yml 中的默认值
+  remote: bootstrap.yml 中的默认值
+  arg: bootstrap.yml 中的默认值

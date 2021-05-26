@@ -1,2 +1,6 @@
 server:
   port: 8888
+
+priority:
+  remote: 配置中心的值
+  arg: 配置中心的值

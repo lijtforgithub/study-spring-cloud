@@ -3,6 +3,8 @@ package com.ljt.study.cloud.filter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
+import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ public class ServiceFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "pre";
+        return FilterConstants.PRE_TYPE;
     }
 
     @Override
@@ -36,7 +38,9 @@ public class ServiceFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        RequestContext ctx = RequestContext.getCurrentContext();
+        // 可以用来设置是否走后面的过滤器
+        return ctx.sendZuulResponse();
     }
 
     @Override
@@ -48,9 +52,10 @@ public class ServiceFilter extends ZuulFilter {
         
         if (accessToken == null) {
             log.warn("token is empty");
+            // 走后面的过滤器 不做服务转发了
             ctx.setSendZuulResponse(false);
-            ctx.setResponseStatusCode(401);
-            
+            ctx.setResponseStatusCode(HttpStatus.SC_UNAUTHORIZED);
+
             try {
                 ctx.getResponse().getWriter().write("token is empty");
             }catch (Exception e){

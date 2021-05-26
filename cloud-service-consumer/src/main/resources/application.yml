@@ -8,19 +8,18 @@ spring:
 ribbon:
   eager-load:
     enabled: true
-#    clients: service-provider, a
-  # 默认2000，单位毫秒，连接建立超时时间
+    clients: service-provider
+  # 刷新时间
+  ServerListRefreshInterval: 5000
+  # 连接建立超时时间 默认2000ms
   ConnectTimeout: 3000
-  # 默认5000，单位毫秒，读取数据超时时间
+  # 读取数据超时时间 默认5000ms
   ReadTimeout: 10000
-  # 默认false，是否对所有操作在失败时进行重试，特殊服务(比如订单，减库存，扣款等操作)可能不允许重试
-  # true:允许重试(和MaxAutoRetries，MaxAutoRetriesNextServer配合使用)
-
-  # false:禁止重试
+  # 是否对所有操作在失败时进行重试 默认false(只对get请求重试) 和MaxAutoRetries/MaxAutoRetriesNextServer配合使用
   OkToRetryOnAllOperations: true
-  # 默认0，单个实例(单个pod)重试次数(除去第一次）
+  # 单个实例重试次数(除去第一次） 默认0
   MaxAutoRetries: 1
-  # 默认1，单个服务（例如：构建服务，一个服务有多个实例）重试次数(除去第一个服务实例）
+  # 单个服务(例如：订单服务 一个服务有多个实例)重试次数(除去第一个服务实例) 默认1
   MaxAutoRetriesNextServer: 1
 
 feign:

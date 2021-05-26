@@ -4,3 +4,17 @@ server:
 priority:
   remote: 配置中心的值
   arg: 配置中心的值
+
+spring:
+  cloud:
+    config:
+      # https://github.com/spring-cloud/spring-cloud-config/issues/359
+      # an app can't decide on its own that it can override configuration from the remote source
+      # 应用程序不能够自己决定是否能够覆盖，而是要在远程的配置文件中指明
+
+      # 如果允许被覆盖的话 这个值必须被设置为ture 默认true
+      allow-override: true
+      # 如果为ture 外部拓展属性文件不会覆盖任何已经存在的值 (当allow-override和override-none同时为true 远程配置的优先级降低 不能覆盖其他配置) 默认false
+      override-none: true
+      # 用来标识外部配置是否能够覆盖系统属性 默认true
+      override-system-properties: false

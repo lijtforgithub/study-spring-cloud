@@ -17,9 +17,6 @@ spring:
 #          password: ******
         native:
           search-locations: ${native-path}global/,${native-path}{application}/
-      allow-override: false
-      override-none: false
-      override-system-properties: false
   profiles:
     active: native
 

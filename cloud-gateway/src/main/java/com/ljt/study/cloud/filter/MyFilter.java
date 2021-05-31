@@ -1,4 +1,4 @@
-package com.ljt.study.cloud;
+package com.ljt.study.cloud.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

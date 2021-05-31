@@ -1,5 +1,6 @@
 package com.ljt.study.cloud;
 
+import com.ljt.study.cloud.properties.PriorityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

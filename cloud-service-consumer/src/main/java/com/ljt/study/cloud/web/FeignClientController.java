@@ -22,4 +22,9 @@ public class FeignClientController {
         return serviceFeignClient.getCurrentTime();
     }
 
+    @GetMapping("/port")
+    public String getPort() {
+        return serviceFeignClient.getServicePort();
+    }
+
 }

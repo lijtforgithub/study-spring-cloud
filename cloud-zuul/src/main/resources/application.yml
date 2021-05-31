@@ -6,6 +6,7 @@ spring:
     name: zuul
 
 zuul:
+  prefix: /api
   routes:
     api-service:
       path: /provider/**

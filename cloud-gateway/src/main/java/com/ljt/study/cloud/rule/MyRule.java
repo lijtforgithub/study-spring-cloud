@@ -1,4 +1,4 @@
-package com.ljt.study.cloud;
+package com.ljt.study.cloud.rule;
 
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractLoadBalancerRule;
@@ -23,7 +23,7 @@ public class MyRule extends AbstractLoadBalancerRule {
 
     @Override
     public Server choose(Object key) {
-        List<Server> list = this.getLoadBalancer().getReachableServers();
+        List<Server> list = getLoadBalancer().getReachableServers();
         log.info("服务：" + list);
         return list.get(0);
     }

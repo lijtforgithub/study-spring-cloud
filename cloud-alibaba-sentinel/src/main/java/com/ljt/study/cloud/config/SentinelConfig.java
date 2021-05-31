@@ -16,13 +16,13 @@ import java.util.List;
 @Component
 public class SentinelConfig {
 
-    public static final String RS_HW = "HelloWorld";
+    public static final String HELLO_WORLD = "HelloWorld";
 
     @PostConstruct
     private void initFlowRules() {
         List<FlowRule> rules = new ArrayList<>();
         FlowRule rule = new FlowRule();
-        rule.setResource(RS_HW);
+        rule.setResource(HELLO_WORLD);
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         rule.setCount(2);
         rules.add(rule);

@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: service-provider
@@ -10,6 +13,8 @@ spring:
 #        serviceId: config-server
 eureka:
   client:
+    # 是否注册服务 默认true
+    enabled: true
     # 在client端配置：将自己真正的健康状态传播到server
     healthcheck:
       enabled: true

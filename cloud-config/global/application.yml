@@ -4,14 +4,18 @@ eureka:
     instance-id: ${eureka.instance.hostname}:${server.port}
     # 服务过期时间配置 超过这个时间没有接收到心跳Server就会将这个实例剔除 默认90s
     # Server一定要设置eureka.server.eviction-interval-timer-in-ms否则这个配置无效 这个配置一般为服务刷新时间配置的三倍
-    lease-expiration-duration-in-seconds: 15
+    lease-expiration-duration-in-seconds: 100
     # 服务刷新时间配置 每隔这个时间Client会主动心跳一次 默认30s
-    lease-renewal-interval-in-seconds: 5
+    lease-renewal-interval-in-seconds: 60
   client:
     # 刷新本地缓存时间 Client间隔多久去拉取服务注册信息 默认为30秒 Client读取的是readCacheMap
-    registry-fetch-interval-seconds: 5
+    registry-fetch-interval-seconds: 60
     serviceUrl:
       defaultZone: http://eureka01.com:8761/eureka/
+
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
 
 management:
   endpoint:

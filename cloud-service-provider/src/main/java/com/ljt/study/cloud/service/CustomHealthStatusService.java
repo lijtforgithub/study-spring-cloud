@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Setter
 @Service
-public class CustomHealthStatus implements HealthIndicator {
+public class CustomHealthStatusService implements HealthIndicator {
 
     private boolean up = true;
 

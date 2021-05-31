@@ -1,4 +1,4 @@
-package com.ljt.study.cloud;
+package com.ljt.study.cloud.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

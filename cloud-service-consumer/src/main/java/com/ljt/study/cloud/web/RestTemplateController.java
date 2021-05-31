@@ -1,5 +1,6 @@
 package com.ljt.study.cloud.web;
 
+import com.ljt.study.cloud.api.ServiceApi;
 import com.ljt.study.cloud.hystrix.RestTemplateHystrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -9,31 +10,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import static com.ljt.study.cloud.util.Constant.PROVIDER;
-
 /**
  * @author LiJingTang
  * @date 2020-06-30 18:40
  */
 @RestController
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/port")
+public class RestTemplateController {
 
     @Autowired
     private LoadBalancerClient balancerClient;
     @Autowired
     private RestTemplateHystrix restTemplateHystrix;
 
-    @GetMapping("/hello")
-    public String hello() {
-        ServiceInstance instance = balancerClient.choose(PROVIDER);
-        String url = instance.getUri().toString() + "/test/hello";
+    @GetMapping()
+    public String getPort() {
+        // 负载均衡
+        ServiceInstance instance = balancerClient.choose(ServiceApi.APP_NAME);
+        String url = instance.getUri().toString() + "/api/port";
         return new RestTemplate().getForObject(url, String.class);
     }
 
+    @GetMapping("/lb")
+    public String getPortWithLb() {
+        return restTemplateHystrix.getPort();
+    }
+
     @GetMapping("/hystrix")
-    public String helloHystrix() {
-        return restTemplateHystrix.hello();
+    public String getPortWithHystrix() {
+        return restTemplateHystrix.getPortWithHystrix();
     }
 
 }

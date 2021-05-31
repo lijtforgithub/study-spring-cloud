@@ -37,7 +37,7 @@ eureka:
 
 logging:
   level:
-    com.netflix.eureka: debug
+    com.netflix.eureka: DEBUG
 
 # 集群模式
 cluster-zone: http://eureka01.com:8761/eureka/,http://eureka02.com:8762/eureka/,http://eureka03.com:8763/eureka/

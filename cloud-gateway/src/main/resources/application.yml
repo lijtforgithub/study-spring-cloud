@@ -21,4 +21,4 @@ eureka:
 
 SERVICE-PROVIDER:
   ribbon:
-    NFLoadBalancerRuleClassName: com.ljt.study.cloud.MyRule
+    NFLoadBalancerRuleClassName: com.ljt.study.cloud.rule.MyRule

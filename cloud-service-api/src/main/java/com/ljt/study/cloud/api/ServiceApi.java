@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api")
 public interface ServiceApi {
 
+    String APP_NAME = "service-provider";
+
     /**
      * 查询当前时间
      *
@@ -17,5 +19,13 @@ public interface ServiceApi {
      */
     @GetMapping("/time")
     String getCurrentTime();
+
+    /**
+     * 查询实例端口号
+     *
+     * @return 端口号
+     */
+    @GetMapping("/port")
+    String getServicePort();
 
 }

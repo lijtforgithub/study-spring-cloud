@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.ljt.study.cloud.config.SentinelConfig.RS_HW;
+import static com.ljt.study.cloud.config.SentinelConfig.HELLO_WORLD;
 
 /**
  * 注解使用方式
@@ -18,7 +18,7 @@ import static com.ljt.study.cloud.config.SentinelConfig.RS_HW;
 @RequestMapping("/rs")
 public class ResourceController {
 
-    @SentinelResource(value = RS_HW, blockHandler = "back")
+    @SentinelResource(value = HELLO_WORLD, blockHandler = "back")
     @GetMapping()
     public String index() {
         return "Sentinel限流：一个资源";

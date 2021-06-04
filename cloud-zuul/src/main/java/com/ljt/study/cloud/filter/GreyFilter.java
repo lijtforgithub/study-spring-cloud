@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.RIBBON_ROUTING_FILTER_ORDER;
 
 /**
  * 灰度发布
@@ -35,18 +36,19 @@ public class GreyFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 1;
+        // 必须在 RIBBON_ROUTING_FILTER_ORDER 之前
+        return RIBBON_ROUTING_FILTER_ORDER - 1;
     }
 
     @Override
     public boolean shouldFilter() {
         // 可以用来设置是否走当前过滤器
-        RequestContext context = RequestContext.getCurrentContext();
-        return context.sendZuulResponse();
+        return false;
     }
 
     @Override
     public Object run() {
+        log.info("灰度发布");
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
         final String uri = request.getRequestURI().replaceFirst(zuulProperties.getPrefix(), EMPTY);

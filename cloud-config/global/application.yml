@@ -11,7 +11,7 @@ eureka:
     # 刷新本地缓存时间 Client间隔多久去拉取服务注册信息 默认为30秒 Client读取的是readCacheMap
     registry-fetch-interval-seconds: 60
     serviceUrl:
-      defaultZone: http://eureka01.com:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 
 logging:
   level:

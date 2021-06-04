@@ -11,7 +11,7 @@ public class GreyHelper {
 
     private GreyHelper() {}
 
-    private static final ThreadLocal<GreyDTO> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<GreyDTO> THREAD_LOCAL = new InheritableThreadLocal<>();
 
     public static void set(GreyDTO dto) {
         THREAD_LOCAL.set(dto);

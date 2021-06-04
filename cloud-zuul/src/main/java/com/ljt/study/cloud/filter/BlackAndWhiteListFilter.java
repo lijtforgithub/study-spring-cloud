@@ -5,7 +5,6 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -15,19 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.ljt.study.cloud.filter.FilterUtils.AUTH_KEY;
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.DEBUG_FILTER_ORDER;
 
 /**
- * 认证和授权
+ * 黑白名单
  *
  * @author LiJingTang
- * @version 2017年12月12日 下午7:13:12
+ * @date 2021-06-02 17:41
  */
 @Slf4j
 @Component
-public class AuthFilter extends ZuulFilter {
-
-    private static final String TOKEN = "token";
+public class BlackAndWhiteListFilter extends ZuulFilter {
 
     @Autowired
     private UrlMappingProperties properties;
@@ -39,37 +35,31 @@ public class AuthFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return DEBUG_FILTER_ORDER + 2;
+        return Integer.MIN_VALUE;
     }
 
     @Override
     public boolean shouldFilter() {
-        RequestContext context = RequestContext.getCurrentContext();
-        return context.sendZuulResponse() && !Boolean.FALSE.equals(context.get(AUTH_KEY));
+        return true;
     }
 
     @SneakyThrows
     @Override
     public Object run() {
-        log.info("认证授权");
+        log.info("黑白名单");
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
         final String uri = request.getRequestURI();
-        final String token = request.getHeader(TOKEN);
 
-        if (StringUtils.isBlank(token)) {
-            // 走后面的过滤器 不做服务转发了
+        if (properties.getBlackList().contains(uri)) {
+            // 黑名单没有想到实际用途 路径和yml配置没有匹配 直接404
             context.setSendZuulResponse(false);
-            context.setResponseStatusCode(HttpStatus.SC_UNAUTHORIZED);
-            FilterUtils.write(response, "请先登录");
-        } else {
-            log.info("开始认证");
-            if (properties.getFreeList().contains(uri)) {
-                log.info("自由端点");
-            } else {
-                log.info("开始鉴权");
-            }
+            context.setResponseStatusCode(HttpStatus.SC_NOT_ACCEPTABLE);
+            FilterUtils.write(response, "黑名单");
+        } else if (properties.getWhiteList().contains(uri)) {
+            // 白名单 不做认证和授权
+            context.set(AUTH_KEY, Boolean.FALSE);
         }
 
         return null;

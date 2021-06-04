@@ -1,5 +1,6 @@
 package com.ljt.study.cloud.gray;
 
+import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 import static com.ljt.study.cloud.gray.GreyHelper.USER_ID;
+import static com.ljt.study.cloud.gray.GreyHelper.VERSION;
 
 /**
  * @author LiJingTang
@@ -32,11 +34,13 @@ public class GreyAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         final String userId = request.getHeader(USER_ID);
         if (Objects.nonNull(userId)) {
-            GreyDTO dto = new GreyDTO();
-            dto.setUserId(Long.parseLong(userId));
-            GreyHelper.set(dto);
+//            GreyDTO dto = new GreyDTO();
+//            dto.setUserId(Long.parseLong(userId));
+//            GreyHelper.set(dto);
 
-//            RibbonFilterContextHolder.getCurrentContext().add("grey-version", Integer.parseInt(userId) <= 100 ? "v1" : "v2");
+            RibbonFilterContextHolder.getCurrentContext().add(VERSION, Integer.parseInt(userId) <= 100 ? "v1" : "v2");
+        } else {
+            RibbonFilterContextHolder.getCurrentContext().remove(VERSION);
         }
     }
 

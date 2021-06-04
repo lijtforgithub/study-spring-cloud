@@ -6,12 +6,35 @@ spring:
     name: zuul
 
 zuul:
+  # 配置为空 所有请求头都透传到下游服务
+  sensitive-headers:
   prefix: /api
+  # 指定url不能负债均衡 serviceId会走ribbon负载均衡
   routes:
+    # 自己转发自己 转发到zuul内部的controller
+    api-forward:
+      path: /xxoo/**
+      # org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilter
+      # url: localhost:8011
+      # org.springframework.cloud.netflix.zuul.filters.route.SendForwardFilter
+      # 路径不能/zuul开始
+      url: forward:/forward/index
+
+    api-host:
+      path: /route-host/**
+      # 和context.setRouteHost(new URL("http://localhost:8001/registry/apps"))效果一致 而且请求路径必须是 http://localhost/api/route-host
+#      url: http://localhost:8001/registry/apps
+
     api-service:
       path: /provider/**
+      # org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter
       serviceId: service-provider
     api-consumer:
       path: /consumer/**
       serviceId: service-consumer
 #  ignored-services:
+
+# 不注册
+eureka:
+  client:
+    enabled: true

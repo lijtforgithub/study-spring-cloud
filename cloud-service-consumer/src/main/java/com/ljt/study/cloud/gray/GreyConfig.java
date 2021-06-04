@@ -1,8 +1,5 @@
 package com.ljt.study.cloud.gray;
 
-import com.netflix.loadbalancer.IRule;
-import org.springframework.context.annotation.Bean;
-
 /**
  * @author LiJingTang
  * @date 2021-05-29 19:12
@@ -20,9 +17,9 @@ public class GreyConfig {
 //        return new GreyAspect();
 //    }
 
-    @Bean
-    public IRule rule() {
-        return new GreyRule();
-    }
+//    @Bean
+//    public IRule rule() {
+//        return new GreyRule();
+//    }
 
 }

@@ -1,0 +1,17 @@
+pp:
+  file-name: url-mapping
+
+  redirect-list:
+    - origin: /api/consumer/xxoo1
+      redirect: /self/port
+    - origin: /api/consumer/xxoo2
+      redirect: /api/port
+      serviceId: service-provider
+
+  black-list:
+    # 黑名单没有想到实际用途 路径和yml配置没有匹配 直接404 比如/api/black
+    - /api/consumer/black
+  white-list:
+    - /api/consumer/white
+  free-list:
+    - /api/consumer/free

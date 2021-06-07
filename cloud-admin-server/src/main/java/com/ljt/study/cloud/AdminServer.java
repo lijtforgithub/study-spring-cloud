@@ -46,7 +46,7 @@ class DingDingNotifier extends AbstractStatusChangeNotifier {
         String status = instance.getStatusInfo().getStatus();
         Map<String, Object> details = instance.getStatusInfo().getDetails();
         StringBuilder str = new StringBuilder();
-        str.append("系统警告 : 【" + serviceName + "】")
+        str.append("系统警告 : 【").append(serviceName).append("】")
             .append("【服务地址】" + serviceUrl)
             .append("【状态】" + status)
             .append("【详情】" + JSON.toJSONString(details));

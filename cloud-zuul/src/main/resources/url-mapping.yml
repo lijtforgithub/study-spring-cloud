@@ -9,8 +9,7 @@ pp:
       serviceId: service-provider
 
   black-list:
-    # 黑名单没有想到实际用途 路径和yml配置没有匹配 直接404 比如/api/black
-    - /api/consumer/black
+    - 127.0.0.1
   white-list:
     - /api/consumer/white
   free-list:

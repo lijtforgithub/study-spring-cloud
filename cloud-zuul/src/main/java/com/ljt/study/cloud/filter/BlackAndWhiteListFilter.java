@@ -50,14 +50,16 @@ public class BlackAndWhiteListFilter extends ZuulFilter {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
-        final String uri = request.getRequestURI();
+        final String userIp = FilterUtils.getUserIp(request);
+        log.info(userIp);
 
-        if (properties.getBlackList().contains(uri)) {
+        if (properties.getBlackList().contains(userIp)) {
             // 黑名单没有想到实际用途 路径和yml配置没有匹配 直接404
             context.setSendZuulResponse(false);
+            context.set(AUTH_KEY, Boolean.FALSE);
             context.setResponseStatusCode(HttpStatus.SC_NOT_ACCEPTABLE);
             FilterUtils.write(response, "黑名单");
-        } else if (properties.getWhiteList().contains(uri)) {
+        } else if (properties.getWhiteList().contains(request.getRequestURI())) {
             // 白名单 不做认证和授权
             context.set(AUTH_KEY, Boolean.FALSE);
         }

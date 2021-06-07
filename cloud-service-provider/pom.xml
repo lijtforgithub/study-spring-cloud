@@ -26,6 +26,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
+		<!--配置中心Server使用/actuator/bus-refresh 必须添加这个依赖 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
+		</dependency>
     </dependencies>
 	 
 </project>

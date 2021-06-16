@@ -9,7 +9,6 @@ eureka:
 test:
   sets:
     - set1
-    - set2
   # map 结构 移除key 经测试 不能刷新
   map:
     k1:

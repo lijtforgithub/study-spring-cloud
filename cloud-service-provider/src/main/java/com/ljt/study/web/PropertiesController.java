@@ -1,6 +1,5 @@
 package com.ljt.study.web;
 
-import com.ljt.study.cloud.properties.TestProperties;
 import com.ljt.study.properties.TestProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

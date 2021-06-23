@@ -1,5 +1,6 @@
 package com.ljt.study.controller;
 
+import com.ljt.study.shiro.ShiroUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,14 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/login")
+@RequestMapping
 public class LoginController {
 
-    @GetMapping
+    @GetMapping("/login")
     public String index() {
         log.debug("debug: 日志");
+        ShiroUtils.login();
         log.info("info: 日志");
         return "登录";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        ShiroUtils.logout();
+        return "登出";
     }
 
 }

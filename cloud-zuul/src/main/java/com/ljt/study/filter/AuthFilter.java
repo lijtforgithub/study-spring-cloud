@@ -1,6 +1,7 @@
 package com.ljt.study.filter;
 
 import com.ljt.study.properties.UrlMappingProperties;
+import com.ljt.study.shiro.ShiroUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.SneakyThrows;
@@ -51,12 +52,17 @@ public class AuthFilter extends ZuulFilter {
     @SneakyThrows
     @Override
     public Object run() {
-        log.info("认证授权");
+        log.info("认证和鉴权");
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
         final String uri = request.getRequestURI();
         final String token = request.getHeader(TOKEN);
+
+        // 为了简单测试shiro 没生成token 不校验token
+        if (ShiroUtils.isLogin()) {
+            return null;
+        }
 
         if (StringUtils.isBlank(token)) {
             // 走后面的过滤器 不做服务转发了
@@ -64,11 +70,11 @@ public class AuthFilter extends ZuulFilter {
             context.setResponseStatusCode(HttpStatus.SC_UNAUTHORIZED);
             FilterUtils.write(response, "请先登录");
         } else {
-            log.info("开始认证");
+            log.info("校验token");
             if (properties.getFreeList().contains(uri)) {
-                log.info("自由端点");
+                log.info("自由端点认证不鉴权：{}", uri);
             } else {
-                log.info("开始鉴权");
+                log.info("开始鉴权: {}", uri);
             }
         }
 

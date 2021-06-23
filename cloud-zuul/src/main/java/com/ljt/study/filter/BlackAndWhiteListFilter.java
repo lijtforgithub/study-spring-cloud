@@ -60,7 +60,7 @@ public class BlackAndWhiteListFilter extends ZuulFilter {
             context.setResponseStatusCode(HttpStatus.SC_NOT_ACCEPTABLE);
             FilterUtils.write(response, "黑名单");
         } else if (properties.getWhiteList().contains(request.getRequestURI())) {
-            // 白名单 不做认证和授权
+            // 白名单 不做认证和鉴权
             context.set(AUTH_KEY, Boolean.FALSE);
         }
 

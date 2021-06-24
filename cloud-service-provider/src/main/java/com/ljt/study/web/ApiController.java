@@ -1,4 +1,4 @@
-package com.ljt.study.web;
+package com.ljt.study.sse;
 
 import com.ljt.study.api.ServiceApi;
 import org.springframework.beans.factory.annotation.Value;

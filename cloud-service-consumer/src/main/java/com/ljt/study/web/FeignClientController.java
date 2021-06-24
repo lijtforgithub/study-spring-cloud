@@ -1,4 +1,4 @@
-package com.ljt.study.web;
+package com.ljt.study.sse;
 
 import com.ljt.study.client.ServiceFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;

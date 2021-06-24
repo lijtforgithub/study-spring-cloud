@@ -9,7 +9,7 @@ pp:
       serviceId: service-provider
 
   black-list:
-    - 127.0.0.1
+    - 192.168.2.29
   white-list:
     - /api/consumer/white
   free-list:

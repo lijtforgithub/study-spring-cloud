@@ -3,12 +3,18 @@ package com.ljt.study.shiro;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.SessionListener;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +27,9 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilter() {
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
-        factoryBean.setSecurityManager(securityManager());
+        factoryBean.setSecurityManager(securityManager);
         factoryBean.setLoginUrl("/login");
         factoryBean.setUnauthorizedUrl("/login");
 
@@ -39,8 +45,9 @@ public class ShiroConfig {
     }
 
     @Bean
-    public DefaultWebSecurityManager securityManager() {
+    public DefaultWebSecurityManager securityManager(SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setSessionManager(sessionManager);
         List<Realm> realms = Lists.newArrayList(customRealm());
 
         FirstSuccessfulStrategy strategy = new FirstSuccessfulStrategy();
@@ -51,6 +58,23 @@ public class ShiroConfig {
         securityManager.setAuthenticator(authenticator);
 
         return securityManager;
+    }
+
+    @Bean
+    public SessionManager sessionManager(SessionDAO sessionDAO) {
+        ShiroSessionManager sessionManager = new ShiroSessionManager();
+        sessionManager.setSessionDAO(sessionDAO);
+        sessionManager.setSessionListeners(Collections.singletonList(sessionListener()));
+        return sessionManager;
+    }
+
+    private SessionListener sessionListener() {
+        return new ShiroSessionListener();
+    }
+
+    @Bean
+    public SessionDAO sessionDAO(RedisTemplate<Object, Object> redisTemplate) {
+        return new ShiroRedisSessionDAO(redisTemplate);
     }
 
     @Bean

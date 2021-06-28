@@ -1,6 +1,7 @@
 package com.ljt.study.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +13,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import java.util.Collections;
 
@@ -31,6 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    private MyUserDetailService userDetailService;
 //    @Autowired
 //    private MyAuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private SpringSessionBackedSessionRegistry<?> sessionRegistry;
+    @Autowired
+    private SpringSessionRememberMeServices rememberMeServices;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -55,12 +62,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((request, response, e) -> log.info("登录失败：{}", e.getLocalizedMessage()))
             .and()
             .logout()
+                .logoutUrl("/logout")
                 .addLogoutHandler((httpServletRequest, httpServletResponse, authentication) -> log.info("{} 退出了", authentication.getPrincipal()))
             .and()
             // 记住我 token 不一定是浏览器
+//            .rememberMe().rememberMeServices(rememberMeServices).and()
             .rememberMe().and()
             // 限制同一账号只能同时登录一次
-            .sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true).and().and()
+            .sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true)
+                // spring-session集群
+                .sessionRegistry(sessionRegistry)
+                .and().and()
             // 开启basic验证登录
             .httpBasic().and()
             // post/put/delete/patch 不需要?_csrf=入参
@@ -80,14 +92,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .inMemoryAuthentication()
             .withUser(admin())
             .withUser(user());
-    }
-
-    /**
-     * 及时清理过期的session
-     */
-    @Bean
-    HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
     }
 
     @Bean

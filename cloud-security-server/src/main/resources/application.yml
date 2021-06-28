@@ -11,3 +11,7 @@ spring:
     user:
       name: lijt
       password: lijt
+
+eureka:
+  client:
+    enabled: false

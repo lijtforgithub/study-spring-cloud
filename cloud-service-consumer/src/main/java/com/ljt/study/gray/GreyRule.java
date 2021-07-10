@@ -17,7 +17,7 @@ import java.util.Random;
  * @author LiJingTang
  * @date 2021-05-29 17:18
  */
-class GreyRule extends AbstractLoadBalancerRule {
+public class GreyRule extends AbstractLoadBalancerRule {
 
     @Override
     public void initWithNiwsConfig(IClientConfig clientConfig) {

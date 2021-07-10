@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
  * @author LiJingTang
  * @date 2020-07-01 17:28
  */
-public class HystrixTest {
+class HystrixTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         Future<String> future = new HystrixDemo(HystrixCommandGroupKey.Factory.asKey("ext")).queue();

@@ -8,6 +8,7 @@ spring:
 ribbon:
   eager-load:
     enabled: true
+    # 必须要配置应用名 否则true没有效果
     clients: service-provider
   # 刷新时间
   ServerListRefreshInterval: 5000

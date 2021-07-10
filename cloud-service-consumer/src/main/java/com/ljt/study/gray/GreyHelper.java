@@ -4,7 +4,7 @@ package com.ljt.study.gray;
  * @author LiJingTang
  * @date 2021-05-29 18:01
  */
-public class GreyHelper {
+class GreyHelper {
 
     public static final String VERSION = "grey-version";
     public static final String USER_ID = "user-id";

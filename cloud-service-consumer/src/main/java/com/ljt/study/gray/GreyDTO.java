@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2021-05-29 18:03
  */
 @Data
-public class GreyDTO {
+class GreyDTO {
 
     private Long userId;
 

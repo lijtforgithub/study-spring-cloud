@@ -1,4 +1,4 @@
-package com.ljt.study.sse;
+package com.ljt.study.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

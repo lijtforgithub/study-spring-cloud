@@ -16,10 +16,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @date 2020-06-30 18:34
  */
 
-/**
- * 指定服务
- */
-@RibbonClient(value = ServiceApi.APP_NAME, configuration = GreyConfig.class)
+// 指定服务
+@RibbonClient(ServiceApi.APP_NAME)
 
 @EnableHystrix
 @EnableHystrixDashboard

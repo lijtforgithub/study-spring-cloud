@@ -5,7 +5,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -22,10 +21,9 @@ import static com.ljt.study.gray.GreyHelper.VERSION;
  */
 @Aspect
 @Component
-@ConditionalOnClass(GreyConfig.class)
-public class GreyAspect {
+class GreyAspect {
 
-    @Pointcut("execution(public * com.ljt.study.cloud.web.*.*(..))")
+    @Pointcut("within(com.ljt.study.web..*)")
     public void webMethod() {
     }
 

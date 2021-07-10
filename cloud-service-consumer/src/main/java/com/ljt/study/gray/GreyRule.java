@@ -17,7 +17,7 @@ import java.util.Random;
  * @author LiJingTang
  * @date 2021-05-29 17:18
  */
-public class GreyRule extends AbstractLoadBalancerRule {
+class GreyRule extends AbstractLoadBalancerRule {
 
     @Override
     public void initWithNiwsConfig(IClientConfig clientConfig) {
@@ -38,7 +38,7 @@ public class GreyRule extends AbstractLoadBalancerRule {
                 Optional<Server> optional = list.stream().filter(server -> {
                     DiscoveryEnabledServer enabledServer = (DiscoveryEnabledServer) server;
                     String version = enabledServer.getInstanceInfo().getMetadata().get(GreyHelper.VERSION);
-                    // 自处的v1可以从配置或数据库获取
+                    // 此处的v1可以从配置或数据库获取
                     return "v1".equalsIgnoreCase(version);
                 }).findFirst();
                 if (optional.isPresent()) {

@@ -1,7 +1,9 @@
 package com.ljt.study.web;
 
 import com.ljt.study.client.ServiceFeignClient;
+import com.ljt.study.config.ContextHolder;
 import com.ljt.study.config.FeignClientRequestInterceptor;
+import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +39,11 @@ public class FeignClientController {
             HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
             log.info("token = {}", request.getHeader(FeignClientRequestInterceptor.TOKEN));
         }
+
+        ContextHolder.THREAD_LOCAL.set("hello");
+        HystrixRequestContext.initializeContext();
+        ContextHolder.HYSTRIX_VARIABLE.set("world");
+
         return serviceFeignClient.getServicePort();
     }
 

@@ -2,7 +2,6 @@ package com.ljt.study.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
@@ -28,11 +27,14 @@ public class FeignClientRequestInterceptor implements RequestInterceptor {
     public void apply(RequestTemplate template) {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
-        log.info("拦截器 {}", RibbonFilterContextHolder.getCurrentContext().get("grey-version"));
+        log.info("InheritableThreadLocal：{}", ContextHolder.THREAD_LOCAL.get());
+        log.info("HystrixRequestVariableDefault：{}", ContextHolder.HYSTRIX_VARIABLE.get());
+        log.info("requestAttributes：{}", requestAttributes);
 
         if (requestAttributes instanceof ServletRequestAttributes) {
             HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
             String token = request.getHeader(TOKEN);
+            log.info("request-header: {}", token);
 
             if (StringUtils.isNotBlank(token)) {
                 template.header(TOKEN, token);

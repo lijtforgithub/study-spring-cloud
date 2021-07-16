@@ -1,5 +1,6 @@
 package com.ljt.study.gray;
 
+import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -8,8 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-
-import static com.ljt.study.gray.GreyHelper.USER_ID;
+import java.util.Objects;
 
 /**
  * @author LiJingTang
@@ -25,12 +25,12 @@ class GreyAspect {
     @Before("webMethod()")
     public void before(JoinPoint point) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        final String userId = request.getHeader(USER_ID);
-//        if (Objects.nonNull(userId)) {
-//            RibbonFilterContextHolder.getCurrentContext().add(VERSION, Integer.parseInt(userId) <= 100 ? "v1" : "v2");
-//        } else {
-//            RibbonFilterContextHolder.getCurrentContext().remove(VERSION);
-//        }
+        final String userId = request.getHeader(GreyHelper.USER_ID);
+        if (Objects.nonNull(userId)) {
+            RibbonFilterContextHolder.getCurrentContext().add(GreyHelper.VERSION, Integer.parseInt(userId) <= 100 ? "v1" : "v2");
+        } else {
+            RibbonFilterContextHolder.getCurrentContext().remove(GreyHelper.VERSION);
+        }
 
         /*if (Objects.nonNull(userId)) {
             GreyDTO dto = new GreyDTO();

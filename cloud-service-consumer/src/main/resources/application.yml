@@ -36,3 +36,7 @@ hystrix:
     default:
       # 默认THREAD,断路器隔离策略，有 THREAD(线程) 和 SEMAPHORE(信号量) 两种可选
       execution.isolation.strategy: THREAD
+  threadpool:
+    default:
+      maxQueueSize: 50
+      queueSizeRejectionThreshold: 50

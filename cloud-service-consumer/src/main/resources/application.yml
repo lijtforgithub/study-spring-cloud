@@ -17,17 +17,24 @@ ribbon:
   # 读取数据超时时间 默认5000ms
   ReadTimeout: 10000
   # 是否对所有操作在失败时进行重试 默认false(只对get请求重试) 和MaxAutoRetries/MaxAutoRetriesNextServer配合使用
-  OkToRetryOnAllOperations: true
-  # 单个实例重试次数(除去第一次） 默认0
+  # 默认情况下 GET方式请求无论是连接异常还是读取异常都会进行重试 非GET方式请求只有连接异常时才会进行重试
+  OkToRetryOnAllOperations: false
+  # 同一台实例最大重试次数 不包括首次调用 默认0
   MaxAutoRetries: 1
-  # 单个服务(例如：订单服务 一个服务有多个实例)重试次数(除去第一个服务实例) 默认1
+  # 重试负载均衡其他的实例最大重试次数 不包括首次调用 默认1
   MaxAutoRetriesNextServer: 1
 
 feign:
   hystrix:
     # 开启熔断器功能
     enabled: true
-
+  client:
+    config:
+      default:
+        logger-level: full
+logging:
+  level:
+    com.ljt.study.client: DEBUG
 # http://localhost:8088/actuator/hystrix.stream
 # http://localhost:8088/hystrix
 hystrix:

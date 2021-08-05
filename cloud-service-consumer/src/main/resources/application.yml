@@ -15,7 +15,7 @@ ribbon:
   # 连接建立超时时间 默认2000ms
   ConnectTimeout: 3000
   # 读取数据超时时间 默认5000ms
-  ReadTimeout: 10000
+  ReadTimeout: 6000
   # 是否对所有操作在失败时进行重试 默认false(只对get请求重试) 和MaxAutoRetries/MaxAutoRetriesNextServer配合使用
   # 默认情况下 GET方式请求无论是连接异常还是读取异常都会进行重试 非GET方式请求只有连接异常时才会进行重试
   OkToRetryOnAllOperations: false
@@ -28,10 +28,10 @@ feign:
   hystrix:
     # 开启熔断器功能
     enabled: true
-  client:
-    config:
-      default:
-        logger-level: full
+#  client:
+#    config:
+#      default:
+#        logger-level: full
 logging:
   level:
     com.ljt.study.client: DEBUG
@@ -42,7 +42,9 @@ hystrix:
     # default配置全局HystrixCommand，断路器配置(详见HystrixCommandProperties)
     default:
       # 默认THREAD,断路器隔离策略，有 THREAD(线程) 和 SEMAPHORE(信号量) 两种可选
-      execution.isolation.strategy: THREAD
+      execution.isolation:
+        strategy: THREAD
+        thread.timeoutInMilliseconds: 16100
   threadpool:
     default:
       maxQueueSize: 50

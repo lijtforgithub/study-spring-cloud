@@ -37,7 +37,7 @@ zuul:
 # 不注册
 eureka:
   client:
-    enabled: false
+    enabled: true
 
 ---
 spring:

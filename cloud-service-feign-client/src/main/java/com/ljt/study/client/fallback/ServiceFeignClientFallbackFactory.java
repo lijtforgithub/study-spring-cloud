@@ -1,9 +1,13 @@
 package com.ljt.study.client.fallback;
 
+import com.ljt.study.api.dto.UserDTO;
 import com.ljt.study.client.ServiceFeignClient;
 import feign.FeignException;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.io.InputStream;
 
 /**
  * @author LiJingTang
@@ -29,6 +33,30 @@ public class ServiceFeignClientFallbackFactory implements FallbackFactory<Servic
             @Override
             public String getServicePort() {
                 return getFallback(e);
+            }
+
+            @Override
+            public UserDTO getUser() {
+                getFallback(e);
+                return UserDTO.builder().id(0).name("fallback").build();
+            }
+
+            public byte[] byteArray() {
+                getFallback(e);
+                return null;
+            }
+
+            public void resp() {
+                getFallback(e);
+            }
+
+            public InputStream output() {
+                getFallback(e);
+                return null;
+            }
+
+            public void input(InputStream input) {
+                getFallback(e);
             }
         };
     }

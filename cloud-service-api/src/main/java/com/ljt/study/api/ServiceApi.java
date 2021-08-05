@@ -1,7 +1,10 @@
 package com.ljt.study.api;
 
+import com.ljt.study.api.dto.UserDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.io.InputStream;
 
 /**
  * @author LiJingTang
@@ -27,5 +30,25 @@ public interface ServiceApi {
      */
     @GetMapping("/port")
     String getServicePort();
+
+    /**
+     * 测试返回对象
+     *
+     * @return user
+     */
+    @GetMapping("/user")
+    UserDTO getUser();
+
+    @GetMapping("/byte")
+    byte[] byteArray();
+
+    @GetMapping("/resp")
+    void resp();
+
+    @GetMapping("/output")
+    InputStream output();
+
+    @GetMapping("/input")
+    void input(InputStream input);
 
 }

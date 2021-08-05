@@ -978,7 +978,7 @@ ribbon:
   http:
     client:
       enabled: true  
-默认的请求发起是：HttpURLConnection，true：意思是：改成：HttpClinet.
+默认的请求发起是：HttpURLConnection，true：意思是：改成：HttpClient.
 
   okhttp:
     enabled: true ,true:改成OKHttpClient。

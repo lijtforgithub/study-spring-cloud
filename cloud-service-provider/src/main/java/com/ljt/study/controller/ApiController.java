@@ -1,4 +1,4 @@
-package com.ljt.study.sse;
+package com.ljt.study.controller;
 
 import com.ljt.study.api.ServiceApi;
 import com.ljt.study.api.dto.UserDTO;

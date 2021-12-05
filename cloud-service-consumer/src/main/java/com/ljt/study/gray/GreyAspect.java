@@ -18,7 +18,7 @@ import java.util.Objects;
 @Aspect
 class GreyAspect {
 
-    @Pointcut("within(com.ljt.study.web..*)")
+    @Pointcut("within(com.ljt.study.controller..*)")
     public void webMethod() {
     }
 

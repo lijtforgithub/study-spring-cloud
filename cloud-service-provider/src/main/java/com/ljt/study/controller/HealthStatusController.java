@@ -1,4 +1,4 @@
-package com.ljt.study.sse;
+package com.ljt.study.controller;
 
 import com.ljt.study.service.CustomHealthStatusService;
 import org.springframework.beans.factory.annotation.Autowired;

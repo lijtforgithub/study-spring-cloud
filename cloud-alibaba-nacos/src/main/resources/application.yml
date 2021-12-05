@@ -8,7 +8,7 @@ spring:
     nacos:
       server-addr: localhost:8848
       discovery:
-        group: study-test
+        group: study
 #      config:
 #        file-extension: yaml
 #        shared-configs:

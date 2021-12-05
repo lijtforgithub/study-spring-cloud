@@ -1,4 +1,4 @@
-package com.ljt.study.web;
+package com.ljt.study.controller;
 
 import com.ljt.study.api.ServiceApi;
 import lombok.SneakyThrows;

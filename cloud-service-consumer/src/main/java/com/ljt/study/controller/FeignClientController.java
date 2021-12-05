@@ -1,4 +1,4 @@
-package com.ljt.study.web;
+package com.ljt.study.controller;
 
 import com.ljt.study.api.dto.UserDTO;
 import com.ljt.study.client.ServiceFeignClient;
@@ -7,7 +7,6 @@ import com.ljt.study.config.FeignClientRequestInterceptor;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;

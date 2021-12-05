@@ -1,4 +1,4 @@
-package com.ljt.study.sse;
+package com.ljt.study.controller;
 
 import com.ljt.study.properties.TestProperties;
 import lombok.extern.slf4j.Slf4j;

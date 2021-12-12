@@ -1,15 +1,18 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        group: study
+---
+spring:
+  profiles: dev
 server:
   port: 8122
 
+---
 spring:
-  application:
-    name: alibaba-nacos
-  cloud:
-    nacos:
-      server-addr: localhost:8848
-      discovery:
-        group: study
-#      config:
-#        file-extension: yaml
-#        shared-configs:
-#          - da
+  profiles: test
+server:
+  port: 8123

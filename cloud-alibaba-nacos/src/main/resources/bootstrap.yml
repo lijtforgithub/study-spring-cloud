@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: alibaba-nacos
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      config:
+        file-extension: yml
+        namespace: dev
+        shared-configs:
+          - dataId: application.yml
+          - dataId: ${spring.application.name}.yml
+            refresh: true

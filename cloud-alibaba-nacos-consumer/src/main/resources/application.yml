@@ -1,0 +1,12 @@
+server:
+  port: 8125
+
+spring:
+  application:
+    name: alibaba-nacos-consumer
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        # namespace 和 group 都要和服务提供者一致才能调用
+        group: study

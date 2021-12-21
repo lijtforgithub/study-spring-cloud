@@ -1,6 +1,5 @@
-package com.ljt.study.ribbon;
+package com.ljt.study.timeout;
 
-import com.ljt.study.properties.RibbonTimeoutProperties;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;

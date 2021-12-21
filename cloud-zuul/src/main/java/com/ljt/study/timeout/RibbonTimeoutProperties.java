@@ -1,5 +1,6 @@
-package com.ljt.study.properties;
+package com.ljt.study.timeout;
 
+import com.ljt.study.properties.YamlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Set;
 
-import static com.ljt.study.properties.RibbonTimeoutProperties.PREFIX;
+import static com.ljt.study.timeout.RibbonTimeoutProperties.PREFIX;
 
 /**
  * @author LiJingTang

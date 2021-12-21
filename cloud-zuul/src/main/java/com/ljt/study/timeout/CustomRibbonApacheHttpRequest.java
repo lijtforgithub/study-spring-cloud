@@ -1,6 +1,5 @@
-package com.ljt.study.ribbon;
+package com.ljt.study.timeout;
 
-import com.ljt.study.properties.RibbonTimeoutProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -9,7 +8,7 @@ import org.springframework.cloud.netflix.ribbon.apache.RibbonApacheHttpRequest;
 import org.springframework.cloud.netflix.ribbon.support.RibbonCommandContext;
 import org.springframework.util.PathMatcher;
 
-import static com.ljt.study.ribbon.CustomHttpClientRibbonCommand.isConfig;
+import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.isConfig;
 
 /**
  * @author LiJingTang

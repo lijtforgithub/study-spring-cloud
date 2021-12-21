@@ -1,6 +1,5 @@
-package com.ljt.study.ribbon;
+package com.ljt.study.timeout;
 
-import com.ljt.study.properties.RibbonTimeoutProperties;
 import com.netflix.client.config.IClientConfig;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;

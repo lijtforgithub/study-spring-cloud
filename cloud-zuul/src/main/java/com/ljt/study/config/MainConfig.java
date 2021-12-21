@@ -2,8 +2,8 @@ package com.ljt.study.config;
 
 import com.ljt.study.fallback.CustomFallback;
 import com.ljt.study.filter.*;
-import com.ljt.study.properties.RibbonTimeoutProperties;
-import com.ljt.study.ribbon.CustomHttpClientRibbonCommandFactory;
+import com.ljt.study.timeout.RibbonTimeoutProperties;
+import com.ljt.study.timeout.CustomHttpClientRibbonCommandFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,7 +17,7 @@ import org.springframework.util.PathMatcher;
 
 import java.util.Set;
 
-import static com.ljt.study.properties.RibbonTimeoutProperties.ENABLE;
+import static com.ljt.study.timeout.RibbonTimeoutProperties.ENABLE;
 
 /**
  * @author LiJingTang

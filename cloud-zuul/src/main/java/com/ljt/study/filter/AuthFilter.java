@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +24,6 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @version 2017年12月12日 下午7:13:12
  */
 @Slf4j
-@Component
 public class AuthFilter extends ZuulFilter {
 
     private static final String TOKEN = "token";

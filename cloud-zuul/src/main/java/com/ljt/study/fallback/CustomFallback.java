@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -16,7 +15,6 @@ import java.io.InputStream;
  * @author LiJingTang
  * @date 2021-06-07 10:05
  */
-@Component
 public class CustomFallback implements FallbackProvider {
 
     @Override

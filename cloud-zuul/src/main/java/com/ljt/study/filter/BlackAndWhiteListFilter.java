@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +21,6 @@ import static com.ljt.study.filter.FilterUtils.AUTH_KEY;
  * @date 2021-06-02 17:41
  */
 @Slf4j
-@Component
 public class BlackAndWhiteListFilter extends ZuulFilter {
 
     @Autowired

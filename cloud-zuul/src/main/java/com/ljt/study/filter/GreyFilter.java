@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -23,7 +22,6 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @date 2021-05-29 14:48
  */
 @Slf4j
-@Component
 public class GreyFilter extends ZuulFilter {
 
     @Autowired

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LiJingTang
@@ -23,8 +24,10 @@ public class SelfController {
     @Value("${spring.application.name}")
     private String appName;
 
+    @SneakyThrows
     @GetMapping("/port")
     public String getServicePort() {
+        TimeUnit.SECONDS.sleep(10);
         return String.format("%s From Port: %s", appName, port);
     }
 

@@ -1,6 +1,10 @@
-package com.ljt.study.shiro;
+package com.ljt.study.config;
 
 import com.google.common.collect.Lists;
+import com.ljt.study.shiro.CustomRealm;
+import com.ljt.study.shiro.ShiroRedisSessionDAO;
+import com.ljt.study.shiro.ShiroSessionListener;
+import com.ljt.study.shiro.ShiroSessionManager;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.SecurityManager;
@@ -13,7 +17,6 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Collections;
@@ -28,7 +31,6 @@ import static org.apache.shiro.web.filter.mgt.DefaultFilter.authc;
  * @author LiJingTang
  * @date 2021-06-23 13:58
  */
-@Configuration
 public class ShiroConfig {
 
     @Bean

@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @author LiJingTang
  * @date 2021-06-02 20:18
  */
-public class FilterUtils {
+class FilterUtils {
 
     private FilterUtils() {
     }

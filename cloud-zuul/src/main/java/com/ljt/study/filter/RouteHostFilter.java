@@ -5,7 +5,6 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
@@ -19,7 +18,6 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @date 2021-06-02 15:37
  */
 @Slf4j
-@Component
 public class RouteHostFilter extends ZuulFilter {
 
     @Override

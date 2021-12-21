@@ -34,6 +34,18 @@ zuul:
       serviceId: service-consumer
 #  ignored-services:
 
+#service-consumer:
+#ribbon:
+#  ReadTimeout: 11000
+#  ConnectTimeout: 11000
+hystrix:
+  command:
+    service-provider:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+
 # 不注册
 eureka:
   client:

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LiJingTang
@@ -37,8 +38,10 @@ public class ApiController implements ServiceApi {
         return LocalDateTime.now().toString();
     }
 
+    @SneakyThrows
     @Override
     public String getServicePort() {
+        TimeUnit.SECONDS.sleep(10);
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         if (requestAttributes instanceof ServletRequestAttributes) {
             HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();

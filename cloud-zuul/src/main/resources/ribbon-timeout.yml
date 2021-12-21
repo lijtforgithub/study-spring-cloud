@@ -1,0 +1,10 @@
+ribbon:
+  custom:
+    enable: true
+#    connect-timeout: 10000
+    socket-timeout: 15000
+    urlMap:
+      service-consumer:
+        - '/self/port'
+      service-provider:
+        - '/api/port'

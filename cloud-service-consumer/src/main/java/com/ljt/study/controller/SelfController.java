@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,13 @@ public class SelfController {
     public void resp(HttpServletResponse response) {
         ClassPathResource resource = new ClassPathResource("application.yml");
         response.getOutputStream().write(IOUtils.toByteArray(resource.getInputStream()));
+    }
+
+    @SneakyThrows
+    @GetMapping("/app/{str}")
+    public String getAppName(@PathVariable String str) {
+        TimeUnit.SECONDS.sleep(5);
+        return appName + " - " + str;
     }
 
 }

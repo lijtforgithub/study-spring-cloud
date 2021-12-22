@@ -26,13 +26,15 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * 自定义RibbonCommand 设置单独接口的hystrix超时时间
+ *
  * @author LiJingTang
  * @date 2021-12-21 11:13
  */
 @Slf4j
 @Setter
 @Getter
-public class CustomHttpClientRibbonCommand extends
+class CustomHttpClientRibbonCommand extends
         AbstractRibbonCommand<RibbonLoadBalancingHttpClient, RibbonApacheHttpRequest, RibbonApacheHttpResponse> {
 
     private final RibbonTimeoutProperties ribbonTimeoutProperties;
@@ -79,30 +81,29 @@ public class CustomHttpClientRibbonCommand extends
      *             timeoutInMilliseconds: 3000
      */
     private static String getCommandKey(String commandKey, RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
-        if (isConfig(context, ribbonTimeoutProperties, pathMatcher)) {
+        if (isMatch(context, ribbonTimeoutProperties, pathMatcher)) {
             final String url = context.getUri();
             Optional<String> first = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId()).stream()
                     .filter(s -> s.equals(url) || pathMatcher.match(s, url)).findFirst();
             commandKey = commandKey + ":" + first.orElse("");
+            log.info("hystrix: 缓存key = {}", commandKey);
         }
-
-        log.info("Hystrix 配置缓存key = {}", commandKey);
 
         return commandKey;
     }
 
     private static HystrixCommandProperties.Setter createSetter(IClientConfig config, String commandKey, ZuulProperties zuulProperties,
-                                                                  RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, boolean isConfig) {
+                                                                  RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, boolean isMatch) {
         int hystrixTimeout = getHystrixTimeout(config, commandKey);
         /*
          * 重新设置hystrix的超时时间 如果不设置且小于ribbon超时时间 那么配置的接口的超时时间一样没意义
          * 这里暂时设置为 SocketTimeout + ConnectTimeout
          */
-        if (isConfig && hystrixTimeout < ribbonTimeoutProperties.getSocketTimeout() + ribbonTimeoutProperties.getConnectTimeout()) {
+        if (isMatch && hystrixTimeout < ribbonTimeoutProperties.getSocketTimeout() + ribbonTimeoutProperties.getConnectTimeout()) {
             final String serviceId = context.getServiceId();
             final String url = context.getUri();
-            log.info("更新指定接口hystrix超时时间：{} = {}", serviceId, url);
             hystrixTimeout = ribbonTimeoutProperties.getSocketTimeout() + ribbonTimeoutProperties.getConnectTimeout();
+            log.info("hystrix: 更新[{}]{}超时时间 {}", serviceId, url, hystrixTimeout);
         }
 
         return HystrixCommandProperties.Setter()
@@ -111,7 +112,10 @@ public class CustomHttpClientRibbonCommand extends
     }
 
 
-    static boolean isConfig(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
+    /**
+     * 请求地址是否配置了单独接口的超时时间
+     */
+    static boolean isMatch(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
         Set<String> set = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId());
         final String url = context.getUri();
         return !CollectionUtils.isEmpty(set) && (set.contains(url) || set.stream().anyMatch(s -> pathMatcher.match(s, url)));

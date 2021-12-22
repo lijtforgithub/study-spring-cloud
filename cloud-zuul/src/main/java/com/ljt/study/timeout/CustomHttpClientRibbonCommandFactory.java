@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
+ * 自定义创建RibbonCommand的工厂
+ *
  * @author LiJingTang
  * @date 2021-12-21 11:14
  */

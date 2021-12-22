@@ -6,5 +6,6 @@ ribbon:
     urlMap:
       service-consumer:
         - '/self/port'
+        - '/self/app/{num}'
       service-provider:
         - '/api/port'

@@ -1,8 +1,8 @@
 ribbon:
   custom:
     enable: true
-#    connect-timeout: 10000
-    socket-timeout: 15000
+    connect-timeout: 1000
+    socket-timeout: 11000
     urlMap:
       service-consumer:
         - '/self/port'

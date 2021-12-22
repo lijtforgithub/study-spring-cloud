@@ -28,3 +28,7 @@ priority:
   application: bootstrap.yml 中的默认值
   remote: bootstrap.yml 中的默认值
   arg: bootstrap.yml 中的默认值
+
+# 应用本身刷新 http://localhost:port/actuator/refresh
+# 配置中心刷新 http://localhost:8888/actuator/bus-refresh 和 http://localhost:8888/actuator/bus-refresh/{destination}
+# 使用配置中心刷新必须依赖 spring-cloud-starter-bus-amqp

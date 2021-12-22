@@ -19,6 +19,7 @@ import org.springframework.cloud.netflix.ribbon.support.RibbonCommandContext;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.cloud.netflix.zuul.filters.route.support.AbstractRibbonCommand;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 
@@ -26,7 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 自定义RibbonCommand 设置单独接口的hystrix超时时间
+ * 自定义RibbonCommand 设置url级别的hystrix超时时间
  *
  * @author LiJingTang
  * @date 2021-12-21 11:13
@@ -37,21 +38,22 @@ import java.util.Set;
 class CustomHttpClientRibbonCommand extends
         AbstractRibbonCommand<RibbonLoadBalancingHttpClient, RibbonApacheHttpRequest, RibbonApacheHttpResponse> {
 
+    static final String KEY_PREFIX = "[custom:key]";
+    private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
+
     private final RibbonTimeoutProperties ribbonTimeoutProperties;
-    private final PathMatcher pathMatcher;
 
     public CustomHttpClientRibbonCommand(String commandKey, RibbonLoadBalancingHttpClient client, RibbonCommandContext context,
                                          ZuulProperties zuulProperties, FallbackProvider zuulFallbackProvider, IClientConfig config,
-                                         RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
-        super(getSetter(commandKey, zuulProperties, config, context, ribbonTimeoutProperties, pathMatcher),
+                                         RibbonTimeoutProperties ribbonTimeoutProperties) {
+        super(getSetter(commandKey, zuulProperties, config, context, ribbonTimeoutProperties),
                 client, context, zuulFallbackProvider, config);
         this.ribbonTimeoutProperties = ribbonTimeoutProperties;
-        this.pathMatcher = pathMatcher;
     }
 
     private static Setter getSetter(final String commandKey, ZuulProperties zuulProperties, IClientConfig config,
-                                      RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
-        final String key = getCommandKey(commandKey, context, ribbonTimeoutProperties, pathMatcher);
+                                      RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
+        final String key = getCommandKey(commandKey, context, ribbonTimeoutProperties);
         Setter commandSetter = Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("RibbonCommand")).andCommandKey(HystrixCommandKey.Factory.asKey(key));
         final HystrixCommandProperties.Setter setter = createSetter(config, commandKey, zuulProperties, context, ribbonTimeoutProperties, !key.equals(commandKey));
 
@@ -59,8 +61,7 @@ class CustomHttpClientRibbonCommand extends
             final String name = ZuulConstants.ZUUL_EUREKA + commandKey + ".semaphore.maxSemaphores";
             final DynamicIntProperty value = DynamicPropertyFactory.getInstance().getIntProperty(name, zuulProperties.getSemaphore().getMaxSemaphores());
             setter.withExecutionIsolationSemaphoreMaxConcurrentRequests(value.get());
-        }
-        else if (zuulProperties.getThreadPool().isUseSeparateThreadPools()) {
+        } else if (zuulProperties.getThreadPool().isUseSeparateThreadPools()) {
             final String threadPoolKey = zuulProperties.getThreadPool().getThreadPoolKeyPrefix() + commandKey;
             commandSetter.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(threadPoolKey));
         }
@@ -80,13 +81,13 @@ class CustomHttpClientRibbonCommand extends
      *           thread:
      *             timeoutInMilliseconds: 3000
      */
-    private static String getCommandKey(String commandKey, RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
-        if (isMatch(context, ribbonTimeoutProperties, pathMatcher)) {
+    private static String getCommandKey(String commandKey, RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
+        if (isMatch(context, ribbonTimeoutProperties)) {
             final String url = context.getUri();
             Optional<String> first = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId()).stream()
-                    .filter(s -> s.equals(url) || pathMatcher.match(s, url)).findFirst();
-            commandKey = commandKey + ":" + first.orElse("");
-            log.info("hystrix: 缓存key = {}", commandKey);
+                    .filter(s -> s.equals(url) || PATH_MATCHER.match(s, url)).findFirst();
+            commandKey = String.format("%s:[%s]%s", KEY_PREFIX, commandKey, first.orElse(""));
+            log.info("hystrix: 缓存key={}", commandKey);
         }
 
         return commandKey;
@@ -113,18 +114,22 @@ class CustomHttpClientRibbonCommand extends
 
 
     /**
-     * 请求地址是否配置了单独接口的超时时间
+     * 请求地址是否配置了单独的超时时间
      */
-    static boolean isMatch(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
-        Set<String> set = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId());
-        final String url = context.getUri();
-        return !CollectionUtils.isEmpty(set) && (set.contains(url) || set.stream().anyMatch(s -> pathMatcher.match(s, url)));
+    static boolean isMatch(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
+        if (ribbonTimeoutProperties.isEnable() && !CollectionUtils.isEmpty(ribbonTimeoutProperties.getUrlMap())) {
+            Set<String> set = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId());
+            final String url = context.getUri();
+            return !CollectionUtils.isEmpty(set) && (set.contains(url) || set.stream().anyMatch(s -> PATH_MATCHER.match(s, url)));
+        }
+
+        return false;
     }
 
 
     @Override
     protected RibbonApacheHttpRequest createRequest() {
-        return new CustomRibbonApacheHttpRequest(context, ribbonTimeoutProperties, pathMatcher);
+        return new CustomRibbonApacheHttpRequest(context, ribbonTimeoutProperties);
     }
 
 }

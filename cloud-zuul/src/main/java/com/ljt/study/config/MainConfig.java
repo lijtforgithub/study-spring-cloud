@@ -2,22 +2,9 @@ package com.ljt.study.config;
 
 import com.ljt.study.fallback.CustomFallback;
 import com.ljt.study.filter.*;
-import com.ljt.study.timeout.RibbonTimeoutProperties;
-import com.ljt.study.timeout.CustomHttpClientRibbonCommandFactory;
+import com.ljt.study.timeout.EnableUrlRibbonTimeout;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
-import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
-import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.PathMatcher;
-
-import java.util.Set;
-
-import static com.ljt.study.timeout.RibbonTimeoutProperties.ENABLE;
 
 /**
  * @author LiJingTang
@@ -26,6 +13,7 @@ import static com.ljt.study.timeout.RibbonTimeoutProperties.ENABLE;
 @Slf4j
 //@Import({RedisConfig.class, ShiroConfig.class})
 @Configuration
+@EnableUrlRibbonTimeout
 public class MainConfig {
 
     public CustomFallback customFallback() {
@@ -50,19 +38,6 @@ public class MainConfig {
 
     public UrlMappingFilter urlMappingFilter() {
         return new UrlMappingFilter();
-    }
-
-    @Autowired
-    private RibbonTimeoutProperties ribbonTimeoutProperties;
-    @Autowired
-    private PathMatcher pathMatcher;
-
-    @Bean
-    @ConditionalOnProperty(name = ENABLE, havingValue = "true")
-    public RibbonCommandFactory<?> ribbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties,
-                                                        @Autowired(required = false) Set<FallbackProvider> fallbackProviders) {
-        log.info("自定义 CustomHttpClientRibbonCommandFactory");
-        return new CustomHttpClientRibbonCommandFactory(clientFactory, zuulProperties, fallbackProviders, ribbonTimeoutProperties, pathMatcher);
     }
 
 }

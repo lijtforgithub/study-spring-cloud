@@ -1,10 +1,7 @@
 package com.ljt.study.timeout;
 
-import com.ljt.study.properties.YamlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,17 +13,21 @@ import static com.ljt.study.timeout.RibbonTimeoutProperties.PREFIX;
  * @date 2021-12-21 14:01
  */
 @Data
-@Component
-@PropertySource(value = "classpath:ribbon-timeout.yml", factory = YamlPropertySourceFactory.class)
 @ConfigurationProperties(prefix = PREFIX)
 public class RibbonTimeoutProperties {
 
     static final String PREFIX = "ribbon.custom";
     public static final String ENABLE = PREFIX + ".enable";
 
-    private boolean enable = false;
+    private boolean enable = true;
 
+    /**
+     * 链接建立的时间
+     */
     private int connectTimeout;
+    /**
+     * 等待数据的时间或者两个包之间的间隔时间
+     */
     private int socketTimeout;
 
     private Map<String, Set<String>> urlMap;

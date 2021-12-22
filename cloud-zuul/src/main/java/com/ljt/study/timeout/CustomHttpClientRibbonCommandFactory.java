@@ -19,20 +19,18 @@ import java.util.Set;
  * @author LiJingTang
  * @date 2021-12-21 11:14
  */
-public class CustomHttpClientRibbonCommandFactory extends AbstractRibbonCommandFactory {
+class CustomHttpClientRibbonCommandFactory extends AbstractRibbonCommandFactory {
 
     private final SpringClientFactory clientFactory;
     private final ZuulProperties zuulProperties;
     private final RibbonTimeoutProperties ribbonTimeoutProperties;
-    private final PathMatcher pathMatcher;
 
     public CustomHttpClientRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<FallbackProvider> fallbackProviders,
-                                                RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
+                                                RibbonTimeoutProperties ribbonTimeoutProperties) {
         super(fallbackProviders != null ? fallbackProviders : Collections.emptySet());
         this.clientFactory = clientFactory;
         this.zuulProperties = zuulProperties;
         this.ribbonTimeoutProperties = ribbonTimeoutProperties;
-        this.pathMatcher = pathMatcher;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class CustomHttpClientRibbonCommandFactory extends AbstractRibbonCommandF
         final IClientConfig config = clientFactory.getClientConfig(serviceId);
 
         return new CustomHttpClientRibbonCommand(serviceId, client, context, zuulProperties,
-                fallbackProvider, config, ribbonTimeoutProperties, pathMatcher);
+                fallbackProvider, config, ribbonTimeoutProperties);
     }
 
 }

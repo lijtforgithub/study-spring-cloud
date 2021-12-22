@@ -34,13 +34,13 @@ zuul:
       serviceId: service-consumer
 #  ignored-services:
 
-#service-consumer:
-#ribbon:
-#  ReadTimeout: 11000
-#  ConnectTimeout: 11000
+service-consumer:
+  ribbon:
+    ReadTimeout: 1000
+    ConnectTimeout: 1000
 hystrix:
   command:
-    service-provider:
+    service-consumer:
       execution:
         isolation:
           thread:

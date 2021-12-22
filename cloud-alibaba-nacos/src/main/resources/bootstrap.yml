@@ -9,5 +9,6 @@ spring:
         namespace: dev
         shared-configs:
           - dataId: application.yml
-          - dataId: ${spring.application.name}.yml
             refresh: true
+            # 和应用名一样的文件默认加载且可热更新
+#          - dataId: ${spring.application.name}.yml

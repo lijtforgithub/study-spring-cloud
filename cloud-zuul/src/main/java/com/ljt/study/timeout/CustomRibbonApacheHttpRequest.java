@@ -6,7 +6,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonApacheHttpRequest;
 import org.springframework.cloud.netflix.ribbon.support.RibbonCommandContext;
-import org.springframework.util.PathMatcher;
 
 import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.isMatch;
 
@@ -20,12 +19,10 @@ import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.isMatch;
 class CustomRibbonApacheHttpRequest extends RibbonApacheHttpRequest {
 
     private final RibbonTimeoutProperties ribbonTimeoutProperties;
-    private final PathMatcher pathMatcher;
 
-    public CustomRibbonApacheHttpRequest(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties, PathMatcher pathMatcher) {
+    public CustomRibbonApacheHttpRequest(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
         super(context);
         this.ribbonTimeoutProperties = ribbonTimeoutProperties;
-        this.pathMatcher = pathMatcher;
     }
 
     @Override
@@ -33,7 +30,7 @@ class CustomRibbonApacheHttpRequest extends RibbonApacheHttpRequest {
         HttpUriRequest request = super.toRequest(requestConfig);
 
         // 满足配置 重新设置请求的超时时间
-        if (request instanceof HttpRequestBase && isMatch(context, ribbonTimeoutProperties, pathMatcher)) {
+        if (isMatch(context, ribbonTimeoutProperties) && request instanceof HttpRequestBase) {
             HttpRequestBase requestBase = (HttpRequestBase) request;
             RequestConfig.Builder builder = RequestConfig.copy(requestConfig);
 

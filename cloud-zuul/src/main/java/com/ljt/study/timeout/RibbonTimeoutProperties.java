@@ -19,7 +19,7 @@ public class RibbonTimeoutProperties {
     static final String PREFIX = "ribbon.custom";
     public static final String ENABLE = PREFIX + ".enable";
 
-    private boolean enable = true;
+    private Boolean enable;
 
     /**
      * 链接建立的时间

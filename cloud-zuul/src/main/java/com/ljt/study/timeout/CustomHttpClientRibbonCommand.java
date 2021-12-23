@@ -117,7 +117,7 @@ class CustomHttpClientRibbonCommand extends
      * 请求地址是否配置了单独的超时时间
      */
     static boolean isMatch(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
-        if (ribbonTimeoutProperties.isEnable() && !CollectionUtils.isEmpty(ribbonTimeoutProperties.getUrlMap())) {
+        if (Boolean.TRUE.equals(ribbonTimeoutProperties.getEnable()) && !CollectionUtils.isEmpty(ribbonTimeoutProperties.getUrlMap())) {
             Set<String> set = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId());
             final String url = context.getUri();
             return !CollectionUtils.isEmpty(set) && (set.contains(url) || set.stream().anyMatch(s -> PATH_MATCHER.match(s, url)));

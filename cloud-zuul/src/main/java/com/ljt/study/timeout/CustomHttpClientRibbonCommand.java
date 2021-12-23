@@ -23,7 +23,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -38,7 +37,7 @@ import java.util.Set;
 class CustomHttpClientRibbonCommand extends
         AbstractRibbonCommand<RibbonLoadBalancingHttpClient, RibbonApacheHttpRequest, RibbonApacheHttpResponse> {
 
-    static final String KEY_PREFIX = "[custom:key]";
+    static final String KEY = "hystrix.custom-timeout.key";
     private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
 
     private final RibbonTimeoutProperties ribbonTimeoutProperties;
@@ -55,7 +54,7 @@ class CustomHttpClientRibbonCommand extends
                                       RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
         final String key = getCommandKey(commandKey, context, ribbonTimeoutProperties);
         Setter commandSetter = Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("RibbonCommand")).andCommandKey(HystrixCommandKey.Factory.asKey(key));
-        final HystrixCommandProperties.Setter setter = createSetter(config, commandKey, zuulProperties, context, ribbonTimeoutProperties, !key.equals(commandKey));
+        final HystrixCommandProperties.Setter setter = createSetter(config, commandKey, zuulProperties, context, ribbonTimeoutProperties, KEY.equals(key));
 
         if (zuulProperties.getRibbonIsolationStrategy() == HystrixCommandProperties.ExecutionIsolationStrategy.SEMAPHORE) {
             final String name = ZuulConstants.ZUUL_EUREKA + commandKey + ".semaphore.maxSemaphores";
@@ -82,15 +81,7 @@ class CustomHttpClientRibbonCommand extends
      *             timeoutInMilliseconds: 3000
      */
     private static String getCommandKey(String commandKey, RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
-        if (isMatch(context, ribbonTimeoutProperties)) {
-            final String url = context.getUri();
-            Optional<String> first = ribbonTimeoutProperties.getUrlMap().get(context.getServiceId()).stream()
-                    .filter(s -> s.equals(url) || PATH_MATCHER.match(s, url)).findFirst();
-            commandKey = String.format("%s:[%s]%s", KEY_PREFIX, commandKey, first.orElse(""));
-            log.info("hystrix: 缓存key={}", commandKey);
-        }
-
-        return commandKey;
+        return isMatch(context, ribbonTimeoutProperties) ? KEY : commandKey;
     }
 
     private static HystrixCommandProperties.Setter createSetter(IClientConfig config, String commandKey, ZuulProperties zuulProperties,

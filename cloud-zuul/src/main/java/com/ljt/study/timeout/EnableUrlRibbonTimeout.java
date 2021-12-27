@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({RibbonTimeoutConfig.class})
+@Import(RibbonTimeoutConfig.class)
 @Documented
 public @interface EnableUrlRibbonTimeout {
 }

@@ -1,5 +1,6 @@
 package com.ljt.study.controller;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LiJingTang
@@ -27,8 +29,10 @@ public class RegistryController {
     @Autowired
     private DiscoveryClient client;
 
+    @SneakyThrows
     @GetMapping("/apps")
     public List<String> findApps() {
+        TimeUnit.SECONDS.sleep(10);
         return client.getServices();
     }
 

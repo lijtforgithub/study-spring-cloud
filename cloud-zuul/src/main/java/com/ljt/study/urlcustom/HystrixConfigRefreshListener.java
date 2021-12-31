@@ -1,4 +1,4 @@
-package com.ljt.study.timeout;
+package com.ljt.study.urlcustom;
 
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.strategy.properties.HystrixPropertiesFactory;
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.KEY;
-import static com.ljt.study.timeout.RibbonTimeoutProperties.PREFIX;
+import static com.ljt.study.urlcustom.CustomHttpClientRibbonCommand.KEY;
+import static com.ljt.study.urlcustom.UrlCustomProperties.PREFIX;
 
 /**
  * @author LiJingTang

@@ -1,11 +1,13 @@
-ribbon:
-  custom:
-    enable: true
-    connect-timeout: 1000
-    socket-timeout: 11000
-    urlMap:
-      service-consumer:
-        - '/self/port'
-        - '/self/app/{num}'
-      service-provider:
-        - '/api/port'
+zuul:
+  url-custom:
+    time-config:
+      connect-timeout: 1000
+      socket-timeout: 11000
+      urlMap:
+        service-consumer:
+          - '/self/port'
+          - '/self/app/{num}'
+        service-provider:
+          - '/api/port'
+    zuul-servlet-url:
+      - '/consumer/self/port'

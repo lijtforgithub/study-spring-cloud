@@ -1,4 +1,4 @@
-package com.ljt.study.timeout;
+package com.ljt.study.urlcustom;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +15,16 @@ import java.util.Set;
  * @date 2021-12-22 15:27
  */
 @Slf4j
-public class RibbonTimeoutConfig {
+public class UrlCustomConfig {
 
     @Autowired
-    private RibbonTimeoutProperties ribbonTimeoutProperties;
+    private UrlCustomProperties urlCustomProperties;
 
     @Bean
     RibbonCommandFactory<?> ribbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties,
                                                         @Autowired(required = false) Set<FallbackProvider> fallbackProviders) {
         log.info("自定义 CustomHttpClientRibbonCommandFactory");
-        return new CustomHttpClientRibbonCommandFactory(clientFactory, zuulProperties, fallbackProviders, ribbonTimeoutProperties);
+        return new CustomHttpClientRibbonCommandFactory(clientFactory, zuulProperties, fallbackProviders, urlCustomProperties);
     }
 
     @Bean
@@ -33,8 +33,13 @@ public class RibbonTimeoutConfig {
     }
 
     @Bean
-    RibbonTimeoutProperties ribbonTimeoutProperties() {
-        return new RibbonTimeoutProperties();
+    UrlCustomProperties urlCustomProperties() {
+        return new UrlCustomProperties();
+    }
+
+    @Bean
+    PreReplaceUrlFilter preReplaceUrlFilter() {
+        return new PreReplaceUrlFilter();
     }
 
 }

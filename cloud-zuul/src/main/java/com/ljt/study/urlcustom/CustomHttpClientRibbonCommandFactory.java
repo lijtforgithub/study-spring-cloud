@@ -1,4 +1,4 @@
-package com.ljt.study.timeout;
+package com.ljt.study.urlcustom;
 
 import com.netflix.client.config.IClientConfig;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
@@ -8,7 +8,6 @@ import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommand;
 import org.springframework.cloud.netflix.zuul.filters.route.support.AbstractRibbonCommandFactory;
-import org.springframework.util.PathMatcher;
 
 import java.util.Collections;
 import java.util.Set;
@@ -23,14 +22,14 @@ class CustomHttpClientRibbonCommandFactory extends AbstractRibbonCommandFactory 
 
     private final SpringClientFactory clientFactory;
     private final ZuulProperties zuulProperties;
-    private final RibbonTimeoutProperties ribbonTimeoutProperties;
+    private final UrlCustomProperties urlCustomProperties;
 
     public CustomHttpClientRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<FallbackProvider> fallbackProviders,
-                                                RibbonTimeoutProperties ribbonTimeoutProperties) {
+                                                UrlCustomProperties urlCustomProperties) {
         super(fallbackProviders != null ? fallbackProviders : Collections.emptySet());
         this.clientFactory = clientFactory;
         this.zuulProperties = zuulProperties;
-        this.ribbonTimeoutProperties = ribbonTimeoutProperties;
+        this.urlCustomProperties = urlCustomProperties;
     }
 
     @Override
@@ -42,7 +41,7 @@ class CustomHttpClientRibbonCommandFactory extends AbstractRibbonCommandFactory 
         final IClientConfig config = clientFactory.getClientConfig(serviceId);
 
         return new CustomHttpClientRibbonCommand(serviceId, client, context, zuulProperties,
-                fallbackProvider, config, ribbonTimeoutProperties);
+                fallbackProvider, config, urlCustomProperties);
     }
 
 }

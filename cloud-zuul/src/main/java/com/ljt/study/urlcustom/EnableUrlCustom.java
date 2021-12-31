@@ -1,4 +1,4 @@
-package com.ljt.study.timeout;
+package com.ljt.study.urlcustom;
 
 import org.springframework.context.annotation.Import;
 
@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(RibbonTimeoutConfig.class)
+@Import(UrlCustomConfig.class)
 @Documented
-public @interface EnableUrlRibbonTimeout {
+public @interface EnableUrlCustom {
 }

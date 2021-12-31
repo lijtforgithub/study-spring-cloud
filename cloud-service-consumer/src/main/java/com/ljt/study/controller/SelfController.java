@@ -28,7 +28,6 @@ public class SelfController {
     @SneakyThrows
     @GetMapping("/port")
     public String getServicePort() {
-        TimeUnit.SECONDS.sleep(10);
         return String.format("%s From Port: %s", appName, port);
     }
 

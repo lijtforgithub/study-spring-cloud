@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -86,6 +88,15 @@ public class ApiController implements ServiceApi {
     @Override
     public void input(InputStream input) {
         log.info(IOUtils.readLines(input, StandardCharsets.UTF_8).toString());
+    }
+
+    @SneakyThrows
+    @PostMapping("/user")
+    public UserDTO getUser(@RequestBody UserDTO userDTO) {
+        TimeUnit.SECONDS.sleep(5);
+        log.info("user = {}", userDTO);
+        userDTO.setAddress("来了一趟");
+        return userDTO;
     }
 
 }

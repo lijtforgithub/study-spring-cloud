@@ -1,7 +1,10 @@
 package com.ljt.study.controller;
 
 import com.ljt.study.api.ServiceApi;
+import com.ljt.study.api.dto.UserDTO;
+import com.ljt.study.rest.RestTemplateWrapper;
 import com.ljt.study.hystrix.RestTemplateHystrix;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -22,6 +25,8 @@ public class RestTemplateController {
     private LoadBalancerClient balancerClient;
     @Autowired
     private RestTemplateHystrix restTemplateHystrix;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @GetMapping("/port")
     public String getPort() {
@@ -40,6 +45,18 @@ public class RestTemplateController {
     @GetMapping("/hystrix")
     public String getPortWithHystrix() {
         return restTemplateHystrix.getPortWithHystrix();
+    }
+
+    @GetMapping("/user")
+    public UserDTO getUser(String token) {
+        UserDTO userDTO = UserDTO.builder().id(1).name("Hello").build();
+        return restTemplate.postForObject("http://" + ServiceApi.APP_NAME + "/api/user" + (StringUtils.isNotBlank(token) ? "?token=" + token : ""), userDTO, UserDTO.class);
+    }
+
+    @GetMapping("/token")
+    public RestTemplateWrapper.TokenDTO getToken() {
+        RestTemplateWrapper wrapper = (RestTemplateWrapper) restTemplate;
+        return wrapper.getToken();
     }
 
 }

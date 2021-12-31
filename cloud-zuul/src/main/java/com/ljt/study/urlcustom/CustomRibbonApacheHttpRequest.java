@@ -1,4 +1,4 @@
-package com.ljt.study.timeout;
+package com.ljt.study.urlcustom;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
@@ -7,7 +7,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonApacheHttpRequest;
 import org.springframework.cloud.netflix.ribbon.support.RibbonCommandContext;
 
-import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.isMatch;
+import static com.ljt.study.urlcustom.CustomHttpClientRibbonCommand.isMatch;
 
 /**
  * 扩展Ribbon请求 设置单独接口的Ribbon超时时间
@@ -18,11 +18,11 @@ import static com.ljt.study.timeout.CustomHttpClientRibbonCommand.isMatch;
 @Slf4j
 class CustomRibbonApacheHttpRequest extends RibbonApacheHttpRequest {
 
-    private final RibbonTimeoutProperties ribbonTimeoutProperties;
+    private final UrlCustomProperties urlCustomProperties;
 
-    public CustomRibbonApacheHttpRequest(RibbonCommandContext context, RibbonTimeoutProperties ribbonTimeoutProperties) {
+    public CustomRibbonApacheHttpRequest(RibbonCommandContext context, UrlCustomProperties urlCustomProperties) {
         super(context);
-        this.ribbonTimeoutProperties = ribbonTimeoutProperties;
+        this.urlCustomProperties = urlCustomProperties;
     }
 
     @Override
@@ -30,15 +30,15 @@ class CustomRibbonApacheHttpRequest extends RibbonApacheHttpRequest {
         HttpUriRequest request = super.toRequest(requestConfig);
 
         // 满足配置 重新设置请求的超时时间
-        if (isMatch(context, ribbonTimeoutProperties) && request instanceof HttpRequestBase) {
+        if (isMatch(context, urlCustomProperties) && request instanceof HttpRequestBase) {
             HttpRequestBase requestBase = (HttpRequestBase) request;
             RequestConfig.Builder builder = RequestConfig.copy(requestConfig);
 
-            if (ribbonTimeoutProperties.getConnectTimeout() > 0) {
-                builder.setConnectTimeout(ribbonTimeoutProperties.getConnectTimeout());
+            if (urlCustomProperties.getTimeConfig().getConnectTimeout() > 0) {
+                builder.setConnectTimeout(urlCustomProperties.getTimeConfig().getConnectTimeout());
             }
-            if (ribbonTimeoutProperties.getSocketTimeout() > 0) {
-                builder.setSocketTimeout(ribbonTimeoutProperties.getSocketTimeout());
+            if (urlCustomProperties.getTimeConfig().getSocketTimeout() > 0) {
+                builder.setSocketTimeout(urlCustomProperties.getTimeConfig().getSocketTimeout());
             }
 
             RequestConfig config = builder.build();

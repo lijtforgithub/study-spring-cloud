@@ -2,7 +2,6 @@ package com.ljt.study.controller;
 
 import com.ljt.study.api.ServiceApi;
 import com.ljt.study.api.dto.UserDTO;
-import com.ljt.study.rest.RestTemplateWrapper;
 import com.ljt.study.hystrix.RestTemplateHystrix;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +50,6 @@ public class RestTemplateController {
     public UserDTO getUser(String token) {
         UserDTO userDTO = UserDTO.builder().id(1).name("Hello").build();
         return restTemplate.postForObject("http://" + ServiceApi.APP_NAME + "/api/user" + (StringUtils.isNotBlank(token) ? "?token=" + token : ""), userDTO, UserDTO.class);
-    }
-
-    @GetMapping("/token")
-    public RestTemplateWrapper.TokenDTO getToken() {
-        RestTemplateWrapper wrapper = (RestTemplateWrapper) restTemplate;
-        return wrapper.getToken();
     }
 
 }

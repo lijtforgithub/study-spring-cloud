@@ -6,17 +6,21 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 /**
  * @author LiJingTang
  * @date 2021-12-29 16:38
  */
 @Slf4j
-//@Component
 @Aspect
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class RestTemplateWrapperAspect {
 
-    @Pointcut("target(com.ljt.study.rest.RestTemplateWrapper)")
+    @Pointcut("within(com.ljt.study.rest.RestTemplateWrapper)")
     public void method() {}
 
     @SneakyThrows

@@ -9,6 +9,7 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,10 +18,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Objects;
 
-import static com.ljt.study.rest.RestTemplateWrapper.ACCESS_TOKEN;
-import static com.ljt.study.rest.RestTemplateWrapper.URL_TOKEN;
+import static com.ljt.study.rest.ApiPathEnum.GET_TOKEN;
+import static com.ljt.study.rest.RestConstants.*;
 
 /**
  * @author LiJingTang
@@ -39,17 +39,22 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("pre");
-        log.info("请求： {} => {}", request.getURI(), new String(body));
-
+        log.debug("原请求：{} => {}", request.getURI(), new String(body));
         if (!isGetTokenUrl(request.getURI())) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromUri(request.getURI());
-            if (builder.build().getQueryParams().containsKey(ACCESS_TOKEN)) {
-                log.info("{} 已设置Token", request.getURI());
-            } else {
-                RestTemplateWrapper.TokenDTO token = Objects.requireNonNull(restTemplateWrapper.getToken(), "获取Token失败");
-                URI newUri = builder.queryParam(ACCESS_TOKEN, token.getAccessToken()).build().toUri();
-                request = new ClientHttpRequestWrapper(newUri, request);
+            MultiValueMap<String, String> map = builder.build().getQueryParams();
+            if (!map.containsKey(APP_KEY)) {
+                builder.queryParam(APP_KEY, restTemplateWrapper.getClientSecret());
             }
+            if (!map.containsKey(DEVICE_ID)) {
+                builder.queryParam(DEVICE_ID, restTemplateWrapper.getClientId());
+            }
+            if (!map.containsKey(ACCESS_TOKEN)) {
+                RestTemplateWrapper.TokenDTO token = restTemplateWrapper.getToken();
+                builder.queryParam(ACCESS_TOKEN, token.getAccessToken());
+            }
+            request = new ClientHttpRequestWrapper(builder.build().toUri(), request);
+            log.debug("新请求：{}", request.getURI());
         }
         stopWatch.stop();
 
@@ -59,7 +64,7 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
         stopWatch.start("post");
         response = new ClientHttpResponseWrapper(response);
-        log.info("响应： {} => {}", response.getRawStatusCode(), new String(IOUtils.toByteArray(response.getBody())));
+        log.debug("响应： {} => {}", response.getRawStatusCode(), new String(IOUtils.toByteArray(response.getBody())));
         stopWatch.stop();
 
         log.info(stopWatch.prettyPrint());
@@ -67,7 +72,7 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
     }
 
     private boolean isGetTokenUrl(URI uri) {
-        return uri.getRawPath().endsWith(URL_TOKEN);
+        return uri.getRawPath().endsWith(GET_TOKEN.getPath());
     }
 
 

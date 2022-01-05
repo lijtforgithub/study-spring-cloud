@@ -10,6 +10,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
@@ -30,6 +31,12 @@ public class PreReplaceUrlFilter extends ZuulFilter {
     private ZuulProperties zuulProperties;
     @Autowired
     private UrlCustomProperties urlCustomProperties;
+
+    @PostConstruct
+    public void init() {
+        log.info("servletPath = {}", zuulProperties.getServletPath());
+        log.info("zuulServletUrl = {}", urlCustomProperties.getZuulServletUrl());
+    }
 
     @Override
     public int filterOrder() {

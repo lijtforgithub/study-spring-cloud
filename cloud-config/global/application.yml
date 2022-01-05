@@ -16,6 +16,7 @@ eureka:
 logging:
   level:
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+    com.ljt.study: TRACE
 
 management:
   endpoint:

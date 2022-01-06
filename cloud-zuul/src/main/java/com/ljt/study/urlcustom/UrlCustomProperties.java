@@ -16,25 +16,17 @@ import static com.ljt.study.urlcustom.UrlCustomProperties.PREFIX;
 @ConfigurationProperties(prefix = PREFIX)
 public class UrlCustomProperties {
 
-    static final String PREFIX = "zuul.url-custom";
+    static final String PREFIX = "url-custom";
 
-    private TimeConfig timeConfig;
+    /**
+     * 链接建立的时间
+     */
+    private int connectTimeout;
+    /**
+     * 等待数据的时间或者两个包之间的间隔时间
+     */
+    private int socketTimeout;
 
-    private Set<String> zuulServletUrl;
-
-
-    @Data
-    public static class TimeConfig {
-        /**
-         * 链接建立的时间
-         */
-        private int connectTimeout;
-        /**
-         * 等待数据的时间或者两个包之间的间隔时间
-         */
-        private int socketTimeout;
-
-        private Map<String, Set<String>> urlMap;
-    }
+    private Map<String, Set<String>> urlMap;
 
 }

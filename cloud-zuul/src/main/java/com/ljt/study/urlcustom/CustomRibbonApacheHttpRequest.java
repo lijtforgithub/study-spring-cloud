@@ -34,11 +34,11 @@ class CustomRibbonApacheHttpRequest extends RibbonApacheHttpRequest {
             HttpRequestBase requestBase = (HttpRequestBase) request;
             RequestConfig.Builder builder = RequestConfig.copy(requestConfig);
 
-            if (urlCustomProperties.getTimeConfig().getConnectTimeout() > 0) {
-                builder.setConnectTimeout(urlCustomProperties.getTimeConfig().getConnectTimeout());
+            if (urlCustomProperties.getConnectTimeout() > 0) {
+                builder.setConnectTimeout(urlCustomProperties.getConnectTimeout());
             }
-            if (urlCustomProperties.getTimeConfig().getSocketTimeout() > 0) {
-                builder.setSocketTimeout(urlCustomProperties.getTimeConfig().getSocketTimeout());
+            if (urlCustomProperties.getSocketTimeout() > 0) {
+                builder.setSocketTimeout(urlCustomProperties.getSocketTimeout());
             }
 
             RequestConfig config = builder.build();

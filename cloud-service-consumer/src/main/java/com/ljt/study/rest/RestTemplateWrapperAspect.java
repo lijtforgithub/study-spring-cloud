@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 /**
  * @author LiJingTang
@@ -16,9 +15,9 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Aspect
-@Component
+//@Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class RestTemplateWrapperAspect {
+class RestTemplateWrapperAspect {
 
     @Pointcut("within(com.ljt.study.rest.RestTemplateWrapper)")
     public void method() {}

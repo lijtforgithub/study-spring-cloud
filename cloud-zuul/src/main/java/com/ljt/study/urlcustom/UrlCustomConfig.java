@@ -37,9 +37,4 @@ public class UrlCustomConfig {
         return new UrlCustomProperties();
     }
 
-    @Bean
-    PreReplaceUrlFilter preReplaceUrlFilter() {
-        return new PreReplaceUrlFilter();
-    }
-
 }

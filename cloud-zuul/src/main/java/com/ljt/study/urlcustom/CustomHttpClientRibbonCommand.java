@@ -92,10 +92,10 @@ class CustomHttpClientRibbonCommand extends
          * 重新设置hystrix的超时时间 如果不设置且小于ribbon超时时间 那么配置的接口的超时时间一样没意义
          * 这里暂时设置为 SocketTimeout + ConnectTimeout
          */
-        if (isMatch && hystrixTimeout < urlCustomProperties.getTimeConfig().getSocketTimeout() + urlCustomProperties.getTimeConfig().getConnectTimeout()) {
+        if (isMatch && hystrixTimeout < urlCustomProperties.getSocketTimeout() + urlCustomProperties.getConnectTimeout()) {
             final String serviceId = context.getServiceId();
             final String url = context.getUri();
-            hystrixTimeout = urlCustomProperties.getTimeConfig().getSocketTimeout() + urlCustomProperties.getTimeConfig().getConnectTimeout();
+            hystrixTimeout = urlCustomProperties.getSocketTimeout() + urlCustomProperties.getConnectTimeout();
             log.info("hystrix: 更新[{}]{}超时时间 {}", serviceId, url, hystrixTimeout);
         }
 
@@ -109,8 +109,8 @@ class CustomHttpClientRibbonCommand extends
      * 请求地址是否配置了单独的超时时间
      */
     static boolean isMatch(RibbonCommandContext context, UrlCustomProperties urlCustomProperties) {
-        if (Objects.nonNull(urlCustomProperties.getTimeConfig()) && !CollectionUtils.isEmpty(urlCustomProperties.getTimeConfig().getUrlMap())) {
-            Set<String> set = urlCustomProperties.getTimeConfig().getUrlMap().get(context.getServiceId());
+        if (Objects.nonNull(urlCustomProperties) && !CollectionUtils.isEmpty(urlCustomProperties.getUrlMap())) {
+            Set<String> set = urlCustomProperties.getUrlMap().get(context.getServiceId());
             final String url = context.getUri();
             return !CollectionUtils.isEmpty(set) && (set.contains(url) || set.stream().anyMatch(s -> PATH_MATCHER.match(s, url)));
         }

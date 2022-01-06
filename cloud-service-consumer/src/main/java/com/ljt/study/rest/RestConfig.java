@@ -23,7 +23,7 @@ import static com.ljt.study.rest.RestConstants.*;
  */
 @Slf4j
 @EnableCreateCacheAnnotation
-@EnableRetry(proxyTargetClass = true)
+@EnableRetry
 @Configuration
 public class RestConfig {
 
@@ -59,5 +59,6 @@ public class RestConfig {
             restTemplateWrapper().refreshToken();
         }
     }
+
 
 }

@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.springframework.core.Ordered;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
@@ -12,7 +14,7 @@ import java.lang.reflect.Method;
  * @date 2021-06-26 09:51
  */
 @Slf4j
-//@Component
+@Component
 class RestTemplateWrapperAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
     private static final long serialVersionUID = -1210382191888075322L;
@@ -24,6 +26,11 @@ class RestTemplateWrapperAdvisor extends StaticMethodMatcherPointcutAdvisor {
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
         return targetClass == RestTemplateWrapper.class;
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
     }
 
 

@@ -1,10 +1,11 @@
-package com.ljt.study.rest;
+package com.ljt.study.inteceptor;
 
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.autoconfigure.LettuceFactory;
 import com.alicp.jetcache.autoconfigure.RedisLettuceAutoConfiguration;
 import io.lettuce.core.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -14,8 +15,11 @@ import org.springframework.data.redis.core.RedisKeyExpiredEvent;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static com.ljt.study.rest.RestConstants.*;
+import static com.ljt.study.inteceptor.RestConstants.CACHE_LISTENER;
+import static com.ljt.study.inteceptor.RestConstants.CACHE_PREFIX;
 
 /**
  * @author LiJingTang
@@ -24,8 +28,9 @@ import static com.ljt.study.rest.RestConstants.*;
 @Slf4j
 @EnableCreateCacheAnnotation
 @EnableRetry
+@ServletComponentScan
 @Configuration
-public class RestConfig {
+public class RestConfig implements WebMvcConfigurer {
 
     @Bean
     public RestTemplateWrapper restTemplateWrapper() {
@@ -60,5 +65,21 @@ public class RestConfig {
         }
     }
 
+    @Bean
+    public ThreadPoolTaskExecutor requestLogTaskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setThreadNamePrefix("request-log_");
+        taskExecutor.setCorePoolSize(Runtime.getRuntime().availableProcessors() * 2 + 1);
+        taskExecutor.setMaxPoolSize(taskExecutor.getCorePoolSize() * 2);
+        taskExecutor.setQueueCapacity(10000);
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        taskExecutor.setRejectedExecutionHandler((r, executor) -> {
+            if (r instanceof  RequestLogTask) {
+                RequestLogTask task = (RequestLogTask) r;
+                log.info("发送MQ：{}", task.getRequestLog());
+            }
+        });
+        return taskExecutor;
+    }
 
 }

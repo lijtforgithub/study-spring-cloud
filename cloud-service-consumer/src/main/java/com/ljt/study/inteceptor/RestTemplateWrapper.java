@@ -1,4 +1,4 @@
-package com.ljt.study.rest;
+package com.ljt.study.inteceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alicp.jetcache.Cache;
@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -29,6 +28,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -40,8 +40,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.ljt.study.rest.ApiPathEnum.GET_TOKEN;
-import static com.ljt.study.rest.RestConstants.*;
+import static com.ljt.study.inteceptor.ApiPathEnum.GET_TOKEN;
+import static com.ljt.study.inteceptor.RestConstants.*;
 
 /**
  * @see RestTemplateBuilder
@@ -157,15 +157,18 @@ public class RestTemplateWrapper extends RestTemplate {
      * 封装使用 ApiPathEnum 为入参方法
      *
      * @param apiEnum 请求接口
-     * @param requestEntity 请求体
+     * @param request 请求体
      * @param responseType 响应体类型
      * @param uriVariables url参数
      * @param <T> 响应体类型
      * @return 响应数据
      */
-    public <T> ResponseEntity<T> executeForEntity(ApiPathEnum apiEnum, HttpEntity<?> requestEntity, Class<T> responseType, Map<String, ?> uriVariables) {
+    public <T> ResponseEntity<T> executeForEntity(ApiPathEnum apiEnum, Object request, Class<T> responseType, Map<String, ?> uriVariables) {
         String path = getPath(apiEnum, uriVariables);
-        return exchange(path, apiEnum.getMethod(), requestEntity, responseType);
+
+        RequestCallback requestCallback = httpEntityCallback(request, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = responseEntityExtractor(responseType);
+        return execute(path, apiEnum.getMethod(), requestCallback, responseExtractor, uriVariables);
     }
 
     /**

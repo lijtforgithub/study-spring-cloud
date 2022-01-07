@@ -1,6 +1,6 @@
 package com.ljt.study.config;
 
-import com.ljt.study.rest.RestConfig;
+import com.ljt.study.inteceptor.RestConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

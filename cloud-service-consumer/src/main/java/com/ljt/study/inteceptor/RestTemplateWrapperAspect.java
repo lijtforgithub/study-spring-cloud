@@ -1,4 +1,4 @@
-package com.ljt.study.rest;
+package com.ljt.study.inteceptor;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

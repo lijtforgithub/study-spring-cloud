@@ -1,4 +1,4 @@
-package com.ljt.study.rest;
+package com.ljt.study.inteceptor;
 
 /**
  * @author LiJingTang

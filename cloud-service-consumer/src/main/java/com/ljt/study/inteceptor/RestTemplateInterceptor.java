@@ -1,10 +1,13 @@
-package com.ljt.study.rest;
+package com.ljt.study.inteceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -19,8 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-import static com.ljt.study.rest.ApiPathEnum.GET_TOKEN;
-import static com.ljt.study.rest.RestConstants.*;
+import static com.ljt.study.inteceptor.ApiPathEnum.GET_TOKEN;
+import static com.ljt.study.inteceptor.RestConstants.*;
 
 /**
  * @author LiJingTang
@@ -39,7 +42,6 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("pre");
-        log.debug("原请求：{} => {}", request.getURI(), new String(body));
         if (!isGetTokenUrl(request.getURI())) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromUri(request.getURI());
             MultiValueMap<String, String> map = builder.build().getQueryParams();
@@ -58,13 +60,18 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
         }
         stopWatch.stop();
 
+        RequestLogHolder.get()
+                .setAiPath(request.getURI().getPath())
+                .setAiReqBody(new String(body));
         stopWatch.start("execute");
         ClientHttpResponse response = execution.execute(request, body);
         stopWatch.stop();
 
         stopWatch.start("post");
         response = new ClientHttpResponseWrapper(response);
-        log.debug("响应： {} => {}", response.getRawStatusCode(), new String(IOUtils.toByteArray(response.getBody())));
+        RequestLogHolder.get()
+                        .setAiResp(new String(IOUtils.toByteArray(response.getBody())))
+                        .setAiCostTime(stopWatch.getLastTaskTimeMillis());
         stopWatch.stop();
 
         log.info(stopWatch.prettyPrint());
@@ -133,6 +140,43 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
         public void close() {
             this.response.close();
         }
+    }
+
+    private static class ParamClientHttpResponse implements ClientHttpResponse {
+
+        @Override
+        public HttpStatus getStatusCode() throws IOException {
+            return HttpStatus.OK;
+        }
+
+        @Override
+        public int getRawStatusCode() throws IOException {
+            return HttpStatus.OK.value();
+        }
+
+        @Override
+        public String getStatusText() throws IOException {
+            return "设备ID或者授权码为空";
+        }
+
+        @Override
+        public void close() {
+
+        }
+
+        @Override
+        public InputStream getBody() throws IOException {
+            ImmutableMap<String, String> map = ImmutableMap.of("code", "400", "message", getStatusText());
+            return new ByteArrayInputStream(JSON.toJSONString(map).getBytes());
+        }
+
+        @Override
+        public HttpHeaders getHeaders() {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            return headers;
+        }
+
     }
 
 }

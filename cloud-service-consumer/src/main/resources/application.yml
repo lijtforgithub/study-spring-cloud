@@ -28,10 +28,10 @@ feign:
   hystrix:
     # 开启熔断器功能
     enabled: true
-#  client:
-#    config:
-#      default:
-#        logger-level: full
+  client:
+    config:
+      default:
+        logger-level: full
 logging:
   level:
     com.ljt.study.client: DEBUG

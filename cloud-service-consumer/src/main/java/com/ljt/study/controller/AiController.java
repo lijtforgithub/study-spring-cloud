@@ -6,7 +6,6 @@ import com.ljt.study.inteceptor.ResponseDTO;
 import com.ljt.study.inteceptor.RestTemplateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import static com.ljt.study.inteceptor.ApiPathEnum.ASSOCIATION_WORD;
@@ -26,7 +25,6 @@ public class AiController {
 
     @GetMapping("/token")
     public RestTemplateWrapper.TokenDTO getToken() {
-        Assert.isTrue(1!=1, "get");
         return restTemplateWrapper.getToken();
     }
 

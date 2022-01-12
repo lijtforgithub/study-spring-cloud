@@ -4,7 +4,12 @@ import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.annotation.Resource;
@@ -20,6 +25,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Objects;
+
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 /**
  * @author jtli3
@@ -31,27 +40,42 @@ public class RequestLogFilter implements Filter {
 
     @Resource
     private ThreadPoolTaskExecutor requestLogTaskExecutor;
+    @Autowired
+    private DefaultErrorAttributes defaultErrorAttributes;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("请求日志Filter开始");
         RepeatableRequestWrapper requestWrapper = new RepeatableRequestWrapper((HttpServletRequest) request);
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+        RequestLog reqLog = RequestLogHolder.get();
 
         try {
-            RequestLogHolder.get()
-                    .setPath(requestWrapper.getRequestURI())
-                    .setReqUrl(JSON.toJSONString(requestWrapper.getParameterMap()))
+            reqLog.setPath(requestWrapper.getRequestURI())
+                    .setReqParam(CollectionUtils.isEmpty(requestWrapper.getParameterMap()) ? null : JSON.toJSONString(requestWrapper.getParameterMap()))
                     .setReqBody(new String(IOUtils.toByteArray(requestWrapper.getInputStream())));
 
             chain.doFilter(requestWrapper, responseWrapper);
+        } catch (ServletException e) {
+            reqLog.setStatusCode(SC_INTERNAL_SERVER_ERROR)
+                    .setErrorMsg(StringUtils.left(e.getMessage(), 200));
+            throw e;
         } finally {
-            RequestLogHolder.get()
-                    .setResp(new String(responseWrapper.getContentAsByteArray()))
+            reqLog.setResp(new String(responseWrapper.getContentAsByteArray()))
                     .setEndDateTime(new Date());
             responseWrapper.copyBodyToResponse();
 
-            requestLogTaskExecutor.execute(new RequestLogTask(RequestLogHolder.get()));
+            if (Objects.isNull(reqLog.getStatusCode())) {
+                reqLog.setStatusCode(responseWrapper.getStatusCode());
+            }
+            if (SC_OK != reqLog.getStatusCode() && StringUtils.isBlank(reqLog.getErrorMsg())) {
+                Throwable e = defaultErrorAttributes.getError(new ServletWebRequest(requestWrapper));
+                if (Objects.nonNull(e)) {
+                    reqLog.setErrorMsg(StringUtils.left(e.getMessage(), 200));
+                }
+            }
+
+            requestLogTaskExecutor.execute(new RequestLogTask(reqLog));
             RequestLogHolder.remove();
         }
 
@@ -86,7 +110,7 @@ public class RequestLogFilter implements Filter {
         }
 
 
-        private class RepeatableInputStream extends ServletInputStream{
+        private class RepeatableInputStream extends ServletInputStream {
 
             private final ByteArrayInputStream byteArrayInputStream;
 

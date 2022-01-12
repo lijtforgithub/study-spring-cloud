@@ -216,6 +216,7 @@ public class RestTemplateWrapper extends RestTemplate {
         param.put("client_id", clientId);
         param.put("client_secret", clientSecret);
         param.put("state_code", centerCityCode);
+        param.put("test", "中文");
         return param;
     }
 

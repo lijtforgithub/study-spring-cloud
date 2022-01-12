@@ -2,6 +2,7 @@ package com.ljt.study.inteceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StreamUtils;
@@ -20,10 +22,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.ljt.study.inteceptor.ApiPathEnum.GET_TOKEN;
-import static com.ljt.study.inteceptor.RestConstants.*;
 
 /**
  * @author LiJingTang
@@ -42,40 +49,63 @@ class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("pre");
-        if (!isGetTokenUrl(request.getURI())) {
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUri(request.getURI());
-            MultiValueMap<String, String> map = builder.build().getQueryParams();
-            if (!map.containsKey(APP_KEY)) {
-                builder.queryParam(APP_KEY, restTemplateWrapper.getClientSecret());
-            }
-            if (!map.containsKey(DEVICE_ID)) {
-                builder.queryParam(DEVICE_ID, restTemplateWrapper.getClientId());
-            }
-            if (!map.containsKey(ACCESS_TOKEN)) {
-                RestTemplateWrapper.TokenDTO token = restTemplateWrapper.getToken();
-                builder.queryParam(ACCESS_TOKEN, token.getAccessToken());
-            }
-            request = new ClientHttpRequestWrapper(builder.build().toUri(), request);
-            log.debug("新请求：{}", request.getURI());
-        }
+//        if (!isGetTokenUrl(request.getURI())) {
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUri(request.getURI());
+//            MultiValueMap<String, String> map = builder.build().getQueryParams();
+//            if (!map.containsKey(APP_KEY)) {
+//                builder.queryParam(APP_KEY, restTemplateWrapper.getClientSecret());
+//            }
+//            if (!map.containsKey(DEVICE_ID)) {
+//                builder.queryParam(DEVICE_ID, restTemplateWrapper.getClientId());
+//            }
+//            if (!map.containsKey(ACCESS_TOKEN)) {
+//                RestTemplateWrapper.TokenDTO token = restTemplateWrapper.getToken();
+//                builder.queryParam(ACCESS_TOKEN, token.getAccessToken());
+//            }
+//            request = new ClientHttpRequestWrapper(builder.build().toUri(), request);
+//            log.debug("新请求：{}", request.getURI());
+//        }
+
+        RequestLog reqLog = RequestLogHolder.get();
+        URI uri = request.getURI();
+        reqLog.setAiPath(uri.getPath())
+                .setAiReqParam(getReqParam(uri))
+                .setAiReqBody(new String(body));
         stopWatch.stop();
 
-        RequestLogHolder.get()
-                .setAiPath(request.getURI().getPath())
-                .setAiReqBody(new String(body));
         stopWatch.start("execute");
         ClientHttpResponse response = execution.execute(request, body);
         stopWatch.stop();
 
         stopWatch.start("post");
         response = new ClientHttpResponseWrapper(response);
-        RequestLogHolder.get()
-                        .setAiResp(new String(IOUtils.toByteArray(response.getBody())))
-                        .setAiCostTime(stopWatch.getLastTaskTimeMillis());
+        reqLog.setAiStatusCode(response.getRawStatusCode())
+                .setErrorMsg(response.getStatusText())
+                .setAiCostMillis(stopWatch.getLastTaskTimeMillis())
+                .setAiResp(new String(IOUtils.toByteArray(response.getBody())));
         stopWatch.stop();
 
         log.info(stopWatch.prettyPrint());
         return response;
+    }
+
+    private String getReqParam(URI uri) {
+        MultiValueMap<String, String> params = UriComponentsBuilder.fromUri(uri).build().getQueryParams();
+        if (CollectionUtils.isEmpty(params)) {
+            return null;
+        }
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(params.size());
+        params.forEach((k, v) -> {
+            List<String> list = v.stream().map(s -> {
+                try {
+                    return URLDecoder.decode(s, StandardCharsets.UTF_8.name());
+                } catch (UnsupportedEncodingException e) {
+                    return null;
+                }
+            }).collect(Collectors.toList());
+            map.put(k, list.size() == 1 ? list.get(0) : list);
+        });
+        return JSON.toJSONString(map);
     }
 
     private boolean isGetTokenUrl(URI uri) {

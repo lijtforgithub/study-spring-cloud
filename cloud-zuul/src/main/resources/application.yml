@@ -1,3 +1,6 @@
+#logging:
+#  level:
+#    root: debug
 server:
   port: 8081
 
@@ -29,9 +32,12 @@ zuul:
       path: /provider/**
       # org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter
       serviceId: service-provider
-    api-consumer:
-      path: /consumer/**
-      serviceId: service-consumer
+#    api-consumer:
+#      path: /consumer/**
+#      serviceId: service-consumer
+    api-zuul:
+      path: /service-consumer/self/port
+      serviceId: ext-service-consumer
 #  ignored-services:
   host:
     socket-timeout-millis: 12000

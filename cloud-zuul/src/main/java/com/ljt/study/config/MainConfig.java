@@ -2,7 +2,6 @@ package com.ljt.study.config;
 
 import com.ljt.study.fallback.CustomFallback;
 import com.ljt.study.filter.*;
-import com.ljt.study.urlcustom.EnableUrlCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 //@Import({RedisConfig.class, ShiroConfig.class})
 @Configuration
-@EnableUrlCustom
+//@EnableUrlCustom
 public class MainConfig {
 
     public CustomFallback customFallback() {

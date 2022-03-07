@@ -30,7 +30,7 @@ class FilterUtils {
     public static String getUserIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (isValid(ip)) {
-            //多次反向代理后会有多个ip值，第一个ip才是真实ip
+            // 多次反向代理后会有多个ip值，第一个ip才是真实ip
             return Stream.of(ip.split(",")).filter(item -> !UN_KNOW.equalsIgnoreCase(item)).findFirst().orElse(ip);
         }
 

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 //@Import({RedisConfig.class, ShiroConfig.class})
-@Configuration
+//@Configuration
 //@EnableUrlCustom
 public class MainConfig {
 

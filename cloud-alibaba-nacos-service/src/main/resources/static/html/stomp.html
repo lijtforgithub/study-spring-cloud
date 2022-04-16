@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STOMP</title>
+</head>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    // const socket = new SockJS('http://localhost:8122/stomp');
+    const ws = new WebSocket('ws://localhost:8080/stomp');
+    const stompClient = Stomp.over(ws);
+
+    const fun = function(resp) {
+        document.getElementById('msg').innerText = resp.body;
+    };
+
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/message', fun);
+    });
+
+    function send() {
+        if (WebSocket.OPEN == ws.readyState) {
+            const text = document.getElementById('text').value;
+            if (text) {
+                stompClient.send('/app/message', {}, text)
+            }
+        } else {
+            console.warn('连接已关闭', ws.readyState);
+        }
+    }
+
+    function mq(type) {
+        if (WebSocket.OPEN == ws.readyState) {
+            const text = document.getElementById('text').value;
+            if (text) {
+                stompClient.send(`/${type}/msg`, {}, text)
+            }
+        } else {
+            console.warn('连接已关闭', ws.readyState);
+        }
+    }
+
+</script>
+<body>
+<h1 id="msg"></h1>
+<hr/>
+<input type="text" id="text">
+<input type="button" onclick="send()" value=" Send ">
+</body>
+</html>

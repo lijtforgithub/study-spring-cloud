@@ -1,24 +1,38 @@
 server:
-  port: 80
+  port: 8080
 
 spring:
   application:
     name: gateway
   cloud:
     gateway:
+      default-filters:
+#        - StripPrefix=2
+      loadbalancer:
+        use404: true
       routes:
-        - id: service-provider
+        - id: before_route
+          uri: https://example.org
           predicates:
-            - Path=/sp/**
+            # RoutePredicateFactory
+            - Before=2022-04-16T14:18:00.000+08:00[Asia/Shanghai]
+        - id: nacos-service
+          uri: lb://alibaba-nacos-service
+          predicates:
+            - Path=/api/nacos-service/**
           ## 负载均衡
-          uri: lb://SERVICE-PROVIDER
           filters:
-            - StripPrefix=1
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
-SERVICE-PROVIDER:
-  ribbon:
-    NFLoadBalancerRuleClassName: com.ljt.study.cloud.rule.MyRule
+            - StripPrefix=2
+            - AddRequestHeader=X-Request-red, blue
+            - AddResponseHeader=X-Response-Red, Blue
+            - MapRequestHeader=Blue, X-Request-Red
+        - id: stomp_route
+          uri: lb:ws://alibaba-nacos-service
+          predicates:
+            - Path=/stomp/**
+        - id: socket-io_route
+          uri: ws://localhost:8133
+          predicates:
+            - Path=/socket.io/**
+      metrics:
+        enabled: true

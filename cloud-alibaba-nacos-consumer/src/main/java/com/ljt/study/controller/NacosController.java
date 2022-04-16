@@ -17,7 +17,7 @@ public class NacosController {
 
     @GetMapping("/port")
     public String getServicePort() {
-        return restTemplate.getForObject("http://alibaba-nacos/port", String.class);
+        return restTemplate.getForObject("http://alibaba-nacos-service/port", String.class);
     }
 
 }

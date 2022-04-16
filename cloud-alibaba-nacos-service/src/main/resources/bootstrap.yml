@@ -1,12 +1,12 @@
 spring:
   application:
-    name: alibaba-nacos
+    name: alibaba-nacos-service
   cloud:
     nacos:
-      server-addr: localhost:8848
+#      server-addr: localhost:8848
       config:
         file-extension: yml
-        namespace: dev
+        namespace: ${spring.profiles.active}
         shared-configs:
           - dataId: application.yml
             refresh: true

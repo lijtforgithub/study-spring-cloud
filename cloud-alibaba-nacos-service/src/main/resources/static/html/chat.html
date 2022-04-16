@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SocketIo</title>
+</head>
+<script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
+<script>
+    const socket = io.connect("http://localhost:8080", {
+        transports: ['websocket'],
+        query: {}
+    });
+    console.info(socket);
+
+    socket.on('connect', () => {
+        document.getElementById('msg').innerText = '建立连接';
+    });
+    socket.on('disconnect', function () {
+        document.getElementById('msg').innerText = '断开连接';
+    });
+
+    socket.on('chat.event', data => {
+        document.getElementById('msg').innerText = data;
+    });
+
+    function send() {
+        if (socket.connected) {
+            const text = document.getElementById('text').value;
+            if (text) {
+                socket.emit('chat.event', text)
+            }
+        } else {
+            console.warn('连接已关闭', socket);
+        }
+    }
+</script>
+<body>
+<h1 id="msg"></h1>
+<hr/>
+<input type="text" id="text">
+<input type="button" onclick="send()" value=" Send ">
+</body>
+</html>

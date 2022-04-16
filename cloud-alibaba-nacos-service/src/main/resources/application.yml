@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: dev
+#  cloud:
+#    nacos:
+#      discovery:
+#        group: study
+#        namespace: ${spring.profiles.active}
+---
+server:
+  port: 8122
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+server:
+  port: 8123
+spring:
+  config:
+    activate:
+      on-profile: test

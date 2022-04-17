@@ -10,6 +10,11 @@ spring:
 #        - StripPrefix=2
       loadbalancer:
         use404: true
+      metrics:
+        enabled: true
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
       routes:
         - id: before_route
           uri: https://example.org
@@ -20,12 +25,16 @@ spring:
           uri: lb://alibaba-nacos-service
           predicates:
             - Path=/api/nacos-service/**
-          ## 负载均衡
           filters:
             - StripPrefix=2
             - AddRequestHeader=X-Request-red, blue
             - AddResponseHeader=X-Response-Red, Blue
             - MapRequestHeader=Blue, X-Request-Red
+          metadata:
+            connect-timeout: 200
+            # a negative value will disable the global response-timeout value
+            response-timeout: 200
+            iAmNumber: 1
         - id: stomp_route
           uri: lb:ws://alibaba-nacos-service
           predicates:
@@ -34,5 +43,12 @@ spring:
           uri: ws://localhost:8133
           predicates:
             - Path=/socket.io/**
-      metrics:
-        enabled: true
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'

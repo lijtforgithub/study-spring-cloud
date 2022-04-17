@@ -3,6 +3,7 @@ package com.ljt.study.filter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_SCHEME_PREFIX_ATTR;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 
 /**
  * @author LiJingTang
@@ -30,12 +30,15 @@ public class CustomFilter implements Ordered, GlobalFilter {
         String segment = uriVariables.get("segment");
         log.info("-----------value={} prefix={} segment={}", value, prefix, segment);
 
+        Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
+        log.info("{} - route={}", ServerWebExchangeUtils.isAlreadyRouted(exchange), route.getMetadata());
+
         return chain.filter(exchange);
     }
 
     @Override
     public int getOrder() {
-        return Integer.MAX_VALUE;
+        return Ordered.LOWEST_PRECEDENCE;
     }
 
 }

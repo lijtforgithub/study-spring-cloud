@@ -8,7 +8,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
  * @author LiJingTang
  * @date 2022-04-17 13:41
  */
-public class PreGatewayFilterFactory  extends AbstractGatewayFilterFactory<PreGatewayFilterFactory.Config> {
+public class PreGatewayFilterFactory extends AbstractGatewayFilterFactory<PreGatewayFilterFactory.Config> {
 
     public PreGatewayFilterFactory() {
         super(Config.class);

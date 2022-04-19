@@ -1,11 +1,13 @@
 package com.ljt.study.config;
 
-import com.ljt.study.inteceptor.RestConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerRequestFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -15,7 +17,6 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
  * @date 2021-05-29 19:11
  */
 @Slf4j
-@Import(RestConfig.class)
 @Configuration
 public class MainConfig {
 

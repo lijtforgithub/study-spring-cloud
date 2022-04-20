@@ -1,7 +1,6 @@
 package com.ljt.study;
 
 import com.ljt.study.api.ServiceApi;
-import com.ljt.study.gray.GreyConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;

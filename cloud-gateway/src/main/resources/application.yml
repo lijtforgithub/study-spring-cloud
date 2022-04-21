@@ -8,13 +8,18 @@ spring:
     gateway:
       default-filters:
 #        - StripPrefix=2
-      loadbalancer:
-        use404: true
+#      loadbalancer:
+#        use404: true
       metrics:
         enabled: true
       httpclient:
         connect-timeout: 1000
         response-timeout: 5s
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#          route-id-prefix: discovery-client_
       routes:
         - id: before_route
           uri: https://example.org

@@ -1,6 +1,7 @@
 package com.ljt.study.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -14,10 +15,17 @@ public class NacosController {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private ServerProperties serverProperties;
 
     @GetMapping("/port")
     public String getServicePort() {
         return restTemplate.getForObject("http://alibaba-nacos-service/port", String.class);
+    }
+
+    @GetMapping("/self/port")
+    public Integer getSelfPort() {
+        return serverProperties.getPort();
     }
 
 }

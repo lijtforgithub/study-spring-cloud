@@ -3,7 +3,11 @@ server:
 
 spring:
   application:
-    name: alibaba-nacos-CONSUMER
+    name: alibaba-nacos-consumer
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
 #  cloud:
 #    nacos:
 #      server-addr: localhost:8848

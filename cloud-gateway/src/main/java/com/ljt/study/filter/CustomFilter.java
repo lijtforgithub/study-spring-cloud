@@ -11,6 +11,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 
@@ -24,6 +25,7 @@ public class CustomFilter implements Ordered, GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("测试filter开始");
         Object value = exchange.getAttributes().get(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         Object prefix = exchange.getAttributes().get(GATEWAY_SCHEME_PREFIX_ATTR);
         Map<String, String> uriVariables = ServerWebExchangeUtils.getUriTemplateVariables(exchange);
@@ -31,7 +33,9 @@ public class CustomFilter implements Ordered, GlobalFilter {
         log.info("-----------value={} prefix={} segment={}", value, prefix, segment);
 
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
-        log.info("{} - route={}", ServerWebExchangeUtils.isAlreadyRouted(exchange), route.getMetadata());
+        if (Objects.nonNull(route)) {
+            log.info("{} - route={}", ServerWebExchangeUtils.isAlreadyRouted(exchange), route.getMetadata());
+        }
 
         return chain.filter(exchange);
     }

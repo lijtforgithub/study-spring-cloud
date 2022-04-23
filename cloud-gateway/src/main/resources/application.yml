@@ -6,20 +6,33 @@ spring:
     name: gateway
   cloud:
     gateway:
-      default-filters:
-#        - StripPrefix=2
-#      loadbalancer:
-#        use404: true
       metrics:
         enabled: true
       httpclient:
         connect-timeout: 1000
-        response-timeout: 5s
+        response-timeout: 12s
+#      loadbalancer:
+#        use404: true
+      default-filters:
+        - StripPrefix=1
+        - name: CustomCacheRequestBody
+          args:
+            bodyClass: java.lang.String
+        - name: RequestRateLimiter
+          args:
+            key-resolver: "#{@customKeyResolver}"
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 5
+            redis-rate-limiter.requestedTokens: 1
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-#          route-id-prefix: discovery-client_
+          filters:
+            - name: RequestSize
+              args:
+                #B为单位 不能配置MB格式
+                maxSize: 20971520
       routes:
         - id: before_route
           uri: https://example.org
@@ -31,15 +44,28 @@ spring:
           predicates:
             - Path=/api/nacos-service/**
           filters:
-            - StripPrefix=2
-            - AddRequestHeader=X-Request-red, blue
-            - AddResponseHeader=X-Response-Red, Blue
-            - MapRequestHeader=Blue, X-Request-Red
+            - StripPrefix=1
+            - name: RequestSize
+              args:
+                maxSize: 10MB
+            - AddRequestHeader=X-Request, test-req
+            - AddResponseHeader=X-Response, test-resp
           metadata:
-            connect-timeout: 200
+            connect-timeout: 2000
             # a negative value will disable the global response-timeout value
-            response-timeout: 200
-            iAmNumber: 1
+            response-timeout: 5s
+            test-key: 自定义值
+        - id: nacos-service-upload_route
+          # 优先级更高
+          order: -1
+          uri: lb://alibaba-nacos-service
+          predicates:
+            - Path=/api/nacos-service/upload
+          filters:
+            - StripPrefix=1
+            - name: RequestSize
+              args:
+                maxSize: 50MB
         - id: stomp_route
           uri: lb:ws://alibaba-nacos-service
           predicates:
@@ -48,7 +74,6 @@ spring:
           uri: ws://localhost:8133
           predicates:
             - Path=/socket.io/**
-
 management:
   endpoint:
     health:
@@ -57,3 +82,6 @@ management:
     web:
       exposure:
         include: '*'
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO

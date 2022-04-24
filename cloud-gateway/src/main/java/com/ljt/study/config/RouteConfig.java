@@ -3,7 +3,6 @@ package com.ljt.study.config;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import static org.springframework.cloud.gateway.support.RouteMetadataUtils.CONNECT_TIMEOUT_ATTR;
 import static org.springframework.cloud.gateway.support.RouteMetadataUtils.RESPONSE_TIMEOUT_ATTR;
@@ -12,7 +11,7 @@ import static org.springframework.cloud.gateway.support.RouteMetadataUtils.RESPO
  * @author LiJingTang
  * @date 2022-04-17 10:56
  */
-@Configuration
+//@Configuration
 public class RouteConfig {
 
     @Bean

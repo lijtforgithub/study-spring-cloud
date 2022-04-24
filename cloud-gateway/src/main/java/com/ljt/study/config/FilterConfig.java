@@ -26,11 +26,12 @@ public class FilterConfig {
     }
 
     @Bean
+    @ConditionalOnEnabledFilter
     RequestLogFilter requestLogFilter(ModifyResponseBodyGatewayFilterFactory factory) {
         return new RequestLogFilter(factory);
     }
 
-    @Bean
+//    @Bean
     public GlobalFilter customGlobalFilter() {
         return (exchange, chain) -> exchange.getPrincipal()
                 .map(Principal::getName)
@@ -43,7 +44,7 @@ public class FilterConfig {
                 .flatMap(chain::filter);
     }
 
-    @Bean
+//    @Bean
     public GlobalFilter customGlobalPostFilter() {
         return (exchange, chain) -> chain.filter(exchange)
                 .then(Mono.just(exchange))

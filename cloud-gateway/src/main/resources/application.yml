@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: gateway
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.cloud.gateway.config.GatewayRedisAutoConfiguration
   cloud:
     gateway:
       metrics:
@@ -18,12 +22,12 @@ spring:
         - name: CustomCacheRequestBody
           args:
             bodyClass: java.lang.String
-        - name: RequestRateLimiter
-          args:
-            key-resolver: "#{@customKeyResolver}"
-            redis-rate-limiter.replenishRate: 1
-            redis-rate-limiter.burstCapacity: 5
-            redis-rate-limiter.requestedTokens: 1
+#        - name: RequestRateLimiter
+#          args:
+#            key-resolver: "#{@customKeyResolver}"
+#            redis-rate-limiter.replenishRate: 1
+#            redis-rate-limiter.burstCapacity: 5
+#            redis-rate-limiter.requestedTokens: 1
       discovery:
         locator:
           enabled: true
@@ -37,7 +41,6 @@ spring:
         - id: before_route
           uri: https://example.org
           predicates:
-            # RoutePredicateFactory
             - Before=2022-04-16T14:18:00.000+08:00[Asia/Shanghai]
         - id: nacos-service
           uri: lb://alibaba-nacos-service
@@ -56,7 +59,6 @@ spring:
             response-timeout: 5s
             test-key: 自定义值
         - id: nacos-service-upload_route
-          # 优先级更高
           order: -1
           uri: lb://alibaba-nacos-service
           predicates:
@@ -69,11 +71,11 @@ spring:
         - id: stomp_route
           uri: lb:ws://alibaba-nacos-service
           predicates:
-            - Path=/stomp/**
+            - Path=/ws/stomp/**
         - id: socket-io_route
           uri: ws://localhost:8133
           predicates:
-            - Path=/socket.io/**
+            - Path=/ws/socket.io/**
 management:
   endpoint:
     health:

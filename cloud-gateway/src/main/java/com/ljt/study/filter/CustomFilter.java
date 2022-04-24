@@ -25,7 +25,7 @@ public class CustomFilter implements Ordered, GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("测试filter开始");
+        log.info("测试filter开始 {}", exchange.getRequest().getURI());
         Object value = exchange.getAttributes().get(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         Object prefix = exchange.getAttributes().get(GATEWAY_SCHEME_PREFIX_ATTR);
         Map<String, String> uriVariables = ServerWebExchangeUtils.getUriTemplateVariables(exchange);

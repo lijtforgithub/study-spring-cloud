@@ -3,11 +3,11 @@ package com.ljt.study.websocket.socketio;
 import com.corundumstudio.socketio.SocketConfig;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.SpringAnnotationScanner;
+import com.ljt.study.websocket.socketio.registry.SocketIoAutoRegistration;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,10 +17,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-class ServerConfig implements ApplicationRunner {
+@EnableConfigurationProperties(SocketIoProperties.class)
+class ServerConfig {
 
     @Autowired
-    private ServerProperties serverProperties;
+    private SocketIoProperties socketIoProperties;
+    @Autowired
+    private SocketIoAutoRegistration socketIoAutoRegistration;
 
     @Bean
     SocketIOServer server() {
@@ -30,7 +33,7 @@ class ServerConfig implements ApplicationRunner {
 
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
         config.setSocketConfig(socketConfig);
-        config.setPort(serverProperties.getPort() + 10);
+        config.setPort(socketIoProperties.getPort());
         return new SocketIOServer(config);
     }
 
@@ -39,9 +42,12 @@ class ServerConfig implements ApplicationRunner {
         return new SpringAnnotationScanner(server);
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        server().start();
+    @Bean
+    public SmartInitializingSingleton registrySocketIo() {
+        return () -> {
+            server().start();
+            socketIoAutoRegistration.start();
+        };
     }
 
 }

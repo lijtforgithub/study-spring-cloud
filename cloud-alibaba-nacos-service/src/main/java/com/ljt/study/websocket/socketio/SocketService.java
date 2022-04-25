@@ -6,7 +6,6 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,18 +23,18 @@ public class SocketService {
     @Autowired
     private SocketIOServer server;
     @Autowired
-    private ServerProperties serverProperties;
+    private SocketIoProperties socketIoProperties;
 
     @OnEvent("chat.event")
     void onEvent(SocketIOClient client, String data, AckRequest ackRequest) {
         log.info("接收客户端消息：{} => {}", client.getSessionId(), data);
-        client.sendEvent(CHAT_EVENT, "服务端回复消息" + (serverProperties.getPort() + 10));
+        client.sendEvent(CHAT_EVENT, "服务端回复消息" + (socketIoProperties.getPort()));
     }
 
     @ResponseBody
     @GetMapping("/socket-io/send")
     public String sendMsg(String msg) {
-        msg = (serverProperties.getPort() + 10) + "广播消息" + msg;
+        msg = (socketIoProperties.getPort()) + "广播消息" + msg;
         server.getBroadcastOperations().sendEvent(CHAT_EVENT, msg);
         log.info(msg);
         return msg;

@@ -73,7 +73,8 @@ spring:
           predicates:
             - Path=/ws/stomp/**
         - id: socket-io_route
-          uri: ws://localhost:8133
+#          uri: ws://localhost:8133
+          uri: lb:ws://alibaba-nacos-service-socketIo
           predicates:
             - Path=/ws/socket.io/**
 management:

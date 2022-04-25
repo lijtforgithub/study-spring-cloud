@@ -25,7 +25,7 @@ class ServerConfig {
     @Autowired
     private SocketIoAutoRegistration socketIoAutoRegistration;
 
-    @Bean
+    @Bean(destroyMethod = "stop")
     SocketIOServer server() {
         SocketConfig socketConfig = new SocketConfig();
         socketConfig.setTcpNoDelay(true);

@@ -43,7 +43,7 @@ class ServerConfig {
     }
 
     @Bean
-    public SmartInitializingSingleton registrySocketIo() {
+    SmartInitializingSingleton registrySocketIo() {
         return () -> {
             server().start();
             socketIoAutoRegistration.start();

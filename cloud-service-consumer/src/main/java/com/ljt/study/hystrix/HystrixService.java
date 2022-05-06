@@ -3,6 +3,7 @@ package com.ljt.study.hystrix;
 import com.ljt.study.api.ServiceApi;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,8 +14,9 @@ import org.springframework.web.client.RestTemplate;
  * @date 2020-07-01 19:37
  */
 @Service
-public class RestTemplateHystrix {
+public class HystrixService {
 
+    @LoadBalanced
     @Autowired
     private RestTemplate restTemplate;
 

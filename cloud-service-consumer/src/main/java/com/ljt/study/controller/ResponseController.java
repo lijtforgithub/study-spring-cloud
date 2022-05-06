@@ -8,6 +8,7 @@ import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
@@ -33,6 +34,7 @@ public class ResponseController {
 
     @Autowired
     private LoadBalancerClient balancerClient;
+    @LoadBalanced
     @Autowired
     private RestTemplate restTemplate;
 

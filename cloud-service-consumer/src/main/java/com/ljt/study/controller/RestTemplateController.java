@@ -2,10 +2,11 @@ package com.ljt.study.controller;
 
 import com.ljt.study.api.ServiceApi;
 import com.ljt.study.api.dto.UserDTO;
-import com.ljt.study.hystrix.RestTemplateHystrix;
+import com.ljt.study.hystrix.HystrixService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,10 @@ public class RestTemplateController {
     @Autowired
     private LoadBalancerClient balancerClient;
     @Autowired
-    private RestTemplateHystrix restTemplateHystrix;
+    private HystrixService hystrixService;
+    @LoadBalanced
+    @Autowired
+    private RestTemplate lbRestTemplate;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -33,23 +37,23 @@ public class RestTemplateController {
         ServiceInstance instance = balancerClient.choose(ServiceApi.APP_NAME);
         String url = instance.getUri().toString() + "/api/port";
         // 没有被代理的RestTemplate只能根据IP地址
-        return new RestTemplate().getForObject(url, String.class);
+        return restTemplate.getForObject(url, String.class);
     }
 
     @GetMapping("/lb")
     public String getPortWithLb() {
-        return restTemplateHystrix.getPort();
+        return hystrixService.getPort();
     }
 
     @GetMapping("/hystrix")
     public String getPortWithHystrix() {
-        return restTemplateHystrix.getPortWithHystrix();
+        return hystrixService.getPortWithHystrix();
     }
 
     @GetMapping("/user")
     public UserDTO getUser(String token) {
         UserDTO userDTO = UserDTO.builder().id(1).name("Hello").build();
-        return restTemplate.postForObject("http://" + ServiceApi.APP_NAME + "/api/user" + (StringUtils.isNotBlank(token) ? "?token=" + token : ""), userDTO, UserDTO.class);
+        return lbRestTemplate.postForObject("http://" + ServiceApi.APP_NAME + "/api/user" + (StringUtils.isNotBlank(token) ? "?token=" + token : ""), userDTO, UserDTO.class);
     }
 
 }

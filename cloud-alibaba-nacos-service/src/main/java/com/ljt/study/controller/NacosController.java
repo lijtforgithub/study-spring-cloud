@@ -32,7 +32,7 @@ public class NacosController {
             String name = headerNames.nextElement();
             log.info("{} = {}", name, request.getHeader(name));
         }
-        return String.format("%s From Port: %s", appName, port);
+        return String.format("%s 来自 Port: %s", appName, port);
     }
 
     @PostMapping("/upload")

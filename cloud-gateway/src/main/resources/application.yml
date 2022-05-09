@@ -32,6 +32,8 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+          route-id-prefix: discovery-client_
+          include-expression: 'serviceId.startsWith("alibaba-nacos-service")'
           filters:
             - name: RequestSize
               args:

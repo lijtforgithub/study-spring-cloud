@@ -7,6 +7,7 @@ import com.netflix.hystrix.strategy.executionhook.HystrixCommandExecutionHook;
 import com.netflix.hystrix.strategy.metrics.HystrixMetricsPublisher;
 import com.netflix.hystrix.strategy.properties.HystrixPropertiesStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -24,6 +25,7 @@ import java.util.concurrent.Callable;
  * @see org.springframework.cloud.sleuth.instrument.hystrix.SleuthHystrixConcurrencyStrategy
  */
 @Slf4j
+@Component
 public class CustomHystrixConcurrencyStrategy extends HystrixConcurrencyStrategy {
 
     @PostConstruct
@@ -44,6 +46,7 @@ public class CustomHystrixConcurrencyStrategy extends HystrixConcurrencyStrategy
 
     @Override
     public <T> Callable<T> wrapCallable(Callable<T> callable) {
+        log.info("---------------------------");
         return new WrappedCallable<>(callable, RequestContextHolder.getRequestAttributes());
     }
 

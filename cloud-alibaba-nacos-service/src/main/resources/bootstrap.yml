@@ -6,7 +6,7 @@ spring:
 #      server-addr: localhost:8848
       config:
         file-extension: yml
-        namespace: ${spring.profiles.active}
+#        namespace: ${spring.profiles.active}
         shared-configs:
           - dataId: application.yml
             refresh: true

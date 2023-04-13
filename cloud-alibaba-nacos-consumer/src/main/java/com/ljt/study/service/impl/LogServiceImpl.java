@@ -32,7 +32,7 @@ public class LogServiceImpl implements LogService {
     private NacosServiceFeignClient serviceFeignClient;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(rollbackFor = Exception.class)
     public void testTx(String key) {
         saveT(key);
 

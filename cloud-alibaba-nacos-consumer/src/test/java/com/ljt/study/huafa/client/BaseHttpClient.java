@@ -112,7 +112,7 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             stopWatch.stop();
 
             stopWatch.start("处理结果");
-            Assert.isTrue(HttpStatus.OK == respEntity.getStatusCode(), () -> new RuntimeException("请求不成功"));
+            Assert.isTrue(HttpStatus.OK == respEntity.getStatusCode(), () -> new RuntimeException("请求接口失败"));
 
             RP body = respEntity.getBody();
 

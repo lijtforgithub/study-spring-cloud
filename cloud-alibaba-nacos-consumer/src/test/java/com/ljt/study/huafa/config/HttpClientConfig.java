@@ -1,11 +1,13 @@
 package com.ljt.study.huafa.config;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.ljt.study.huafa.prop.GatewayProperties;
 import com.ljt.study.huafa.prop.HttpClientProperties;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -16,6 +18,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
  * @date 2023-05-20 13:07
  */
 @Configuration
+@EnableConfigurationProperties({HttpClientProperties.class, GatewayProperties.class})
 public class HttpClientConfig {
 
     @Autowired

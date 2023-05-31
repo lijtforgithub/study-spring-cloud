@@ -8,10 +8,11 @@ import com.ljt.study.huafa.ldap.idm.service.impl.IdmPersonServiceImpl;
 import com.ljt.study.huafa.prop.IdmProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
@@ -23,9 +24,11 @@ import org.springframework.ldap.core.support.LdapContextSource;
 @Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "huafa.idm", value = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(IdmProperties.class)
 class LdapIdmConfig {
 
     @Bean
+    @ConditionalOnMissingBean
     IdmSysApi idmSysApi() {
         return new IdmSysApiImpl();
     }

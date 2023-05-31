@@ -33,7 +33,7 @@ abstract class GatewayHttpClient<E extends RequestEnum, T, R extends GatewayBase
     @Override
     protected void handleResponse(R resp) {
         super.handleResponse(resp);
-        Assert.isTrue("200".equals(resp.getCode()), resp.getMsg());
+        Assert.isTrue("200".equals(resp.getCode()), () -> new RuntimeException(resp.getMsg()));
     }
 
     private String createSign(String timestamp) {

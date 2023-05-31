@@ -35,7 +35,7 @@ public class DataHttpClient extends BaseHttpClient<DataRequestEnum, DataBaseRequ
     @Override
     protected void handleResponse(DataBaseResponse<?> resp) {
         super.handleResponse(resp);
-        Assert.isTrue(200 == resp.getResultCode(), resp.getResultMsg());
+        Assert.isTrue(200 == resp.getResultCode(), () -> new RuntimeException(resp.getResultMsg()));
     }
 
     @Override

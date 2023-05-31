@@ -2,6 +2,7 @@ package com.ljt.study.huafa;
 
 import com.alibaba.fastjson.JSON;
 import com.ljt.study.huafa.api.OASysApi;
+import com.ljt.study.huafa.client.OAFtpClient;
 import com.ljt.study.huafa.dto.oa.request.FlowStartRequest;
 import com.ljt.study.huafa.dto.oa.request.XmlFileDTO;
 import com.ljt.study.huafa.dto.oa.response.FlowStartResponse;
@@ -16,6 +17,7 @@ import org.springframework.util.DigestUtils;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,8 @@ class OASysApiTest {
     private OASysApi oaSysApi;
     @Autowired
     private OAProperties oaProperties;
-
+    @Autowired
+    private OAFtpClient oaFtpClient;
     @Autowired
     private IdmPersonService idmPersonService;
 
@@ -55,6 +58,12 @@ class OASysApiTest {
         FlowStartResponse response = oaSysApi.startFlow(request);
 
         log.info(JSON.toJSONString(response));
+    }
+
+    @Test
+    void testFtp() {
+        File file = new File("/Users/lijingtang/Documents/test.json");
+        oaFtpClient.upload(file);
     }
 
     public static void main(String[] args) throws JAXBException {

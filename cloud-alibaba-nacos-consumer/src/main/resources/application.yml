@@ -68,6 +68,12 @@ huafa:
     password: oa12345678
     #系统标志
     system-name: kfs
+    ftp:
+      host: 172.16.28.30
+      port: 990
+      username: gfoa
+      password: Huafa@gfoa
+      work-dir: /OA_KF_TEST
   idm:
     url: ldap://172.16.44.73:1389
     username: 'uid=AUTH_CUSTOMSERVICE,ou=Application,ou=People,o=huafa.com,o=isp'

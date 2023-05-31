@@ -2,14 +2,12 @@ package com.ljt.study.huafa.prop;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author LiJingTang
  * @date 2023-05-20 13:02
  */
 @Data
-@Component
 @ConfigurationProperties(prefix = HttpClientProperties.PREFIX)
 public class HttpClientProperties {
 

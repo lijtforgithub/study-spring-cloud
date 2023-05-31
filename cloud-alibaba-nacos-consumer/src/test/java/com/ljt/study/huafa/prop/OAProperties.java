@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  * @date 2023-05-23 19:01
  */
 @Data
-@Component
 @ConfigurationProperties(prefix = OAProperties.PREFIX)
 public class OAProperties {
 
@@ -21,5 +20,18 @@ public class OAProperties {
     private String systemName;
 
     private HttpClientProperties httpclient;
+    private FtpProperties ftp;
+
+
+    @Data
+    public static class FtpProperties {
+
+        private String host;
+        private Integer port;
+        private String username;
+        private String password;
+        private String workDir;
+
+    }
 
 }

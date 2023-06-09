@@ -82,6 +82,9 @@ huafa:
     url: https://clink-openapi-test.cnhuafas.com
     access-key-id: 9c3f28526078f59c4360bd9a340448d0
     access-key-secret: QAS3wODO1RJ9w99LYybb
-logging:
-  level:
-    org.apache.http: DEBUG
+    business-line: KFX
+    platform: KFXT
+    public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQshUQsZR2UvrbGtloEVH9IqhqTZk58UT3lUS2/7k8geEWOsvPOI9w8i5YmxiKRDyP3rPU7fq9VCFgnbYn8LX8CAwEAAQ==
+#logging:
+#  level:
+#    org.apache.http: DEBUG

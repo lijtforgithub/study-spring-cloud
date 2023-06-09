@@ -12,7 +12,8 @@ import org.springframework.http.HttpMethod;
 @AllArgsConstructor
 public enum ClinkRequestEnum implements RequestEnum {
 
-    GET_ALL_CDR("/list_cdr_all", "查询通话记录列表", HttpMethod.GET);
+    GET_CLIENT_DETAIL("/describe_client", "查看座席详情", HttpMethod.GET),
+    LIST_ALL_CDR("/list_cdr_all", "查询通话记录列表", HttpMethod.GET);
 
     private final String url;
     private final String desc;

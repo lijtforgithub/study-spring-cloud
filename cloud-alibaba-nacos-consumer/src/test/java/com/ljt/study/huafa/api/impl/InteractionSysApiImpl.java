@@ -5,15 +5,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ljt.study.huafa.api.InteractionSysApi;
 import com.ljt.study.huafa.client.InteractionHttpClient;
-import com.ljt.study.huafa.dto.interaction.request.SmsQueryRequest;
+import com.ljt.study.huafa.dto.interaction.request.SmsStatusRequest;
 import com.ljt.study.huafa.dto.interaction.request.SmsSingleRequest;
-import com.ljt.study.huafa.dto.interaction.response.SmsQueryResponse;
+import com.ljt.study.huafa.dto.interaction.response.SmsStatusResponse;
 import com.ljt.study.huafa.dto.interaction.response.SmsSingleResponse;
 import com.ljt.study.huafa.exception.ClientException;
 import lombok.RequiredArgsConstructor;
 
-import static com.ljt.study.huafa.enums.InteractionRequestEnum.SMS_QUERY;
-import static com.ljt.study.huafa.enums.InteractionRequestEnum.SMS_SINGLE;
+import static com.ljt.study.huafa.enums.InteractionRequestEnum.GET_SMS_STATUS;
+import static com.ljt.study.huafa.enums.InteractionRequestEnum.SEND_SINGLE_SMS;
 
 /**
  * @author LiJingTang
@@ -25,15 +25,15 @@ public class InteractionSysApiImpl implements InteractionSysApi {
     private final InteractionHttpClient client;
 
     @Override
-    public SmsSingleResponse smsSendSingle(SmsSingleRequest request) {
-        return client.execute(SMS_SINGLE, request, SmsSingleResponse.class);
+    public SmsSingleResponse sendSingleSms(SmsSingleRequest request) {
+        return client.execute(SEND_SINGLE_SMS, request, SmsSingleResponse.class);
     }
 
     @Override
-    public String smsQueryStatus(String appSerialNo) {
-        SmsQueryRequest request = new SmsQueryRequest();
+    public String getSmsStatus(String appSerialNo) {
+        SmsStatusRequest request = new SmsStatusRequest();
         request.setAppSerialNo(appSerialNo);
-        SmsQueryResponse response = client.execute(SMS_QUERY, request, SmsQueryResponse.class);
+        SmsStatusResponse response = client.execute(GET_SMS_STATUS, request, SmsStatusResponse.class);
         String data = response.getData();
         Assert.isFalse("null".equals(data), () -> new ClientException(response.getMsg()));
 

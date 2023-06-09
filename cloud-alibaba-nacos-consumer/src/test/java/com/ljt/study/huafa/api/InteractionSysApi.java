@@ -9,8 +9,8 @@ import com.ljt.study.huafa.dto.interaction.response.SmsSingleResponse;
  */
 public interface InteractionSysApi {
 
-    SmsSingleResponse smsSendSingle(SmsSingleRequest request);
+    SmsSingleResponse sendSingleSms(SmsSingleRequest request);
 
-    String smsQueryStatus(String appSerialNo);
+    String getSmsStatus(String appSerialNo);
 
 }

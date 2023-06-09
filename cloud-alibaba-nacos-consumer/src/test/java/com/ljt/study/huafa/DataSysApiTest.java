@@ -24,12 +24,12 @@ class DataSysApiTest {
 
 
     @Test
-    void testArea() {
+    void listArea() {
         AreaRequest request = new AreaRequest();
         request.setUpdateDate(LocalDate.now().minusDays(1));
         request.setPageNo(1);
         request.setPageSize(3);
-        AreaResponse response = dataSysApi.getAreaList(request);
+        AreaResponse response = dataSysApi.listArea(request);
 
         log.info(JSON.toJSONString(response));
     }

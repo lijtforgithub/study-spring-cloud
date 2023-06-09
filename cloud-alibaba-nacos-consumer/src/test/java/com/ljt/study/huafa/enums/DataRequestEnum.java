@@ -12,7 +12,7 @@ import org.springframework.http.HttpMethod;
 @AllArgsConstructor
 public enum DataRequestEnum implements RequestEnum {
 
-    GET_AREA_LIST("/api/gfmd/getHmAreaList", "股份-区域主数据", HttpMethod.POST);
+    LIST_AREA("/api/gfmd/getHmAreaList", "股份-区域主数据", HttpMethod.POST);
 
     private final String url;
     private final String desc;

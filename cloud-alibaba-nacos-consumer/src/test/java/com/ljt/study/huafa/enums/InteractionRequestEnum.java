@@ -12,8 +12,8 @@ import org.springframework.http.HttpMethod;
 @AllArgsConstructor
 public enum InteractionRequestEnum implements RequestEnum {
 
-    SMS_SINGLE("/message/singleSend", "发送单条短信", HttpMethod.POST),
-    SMS_QUERY("/message/messageStatus", "查询短信状态", HttpMethod.POST);
+    SEND_SINGLE_SMS("/message/singleSend", "发送单条短信", HttpMethod.POST),
+    GET_SMS_STATUS("/message/messageStatus", "查询短信状态", HttpMethod.POST);
 
     private final String url;
     private final String desc;

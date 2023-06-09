@@ -8,8 +8,8 @@ import com.ljt.study.huafa.dto.permit.response.UserPositionResponse;
 import com.ljt.study.huafa.dto.permit.response.UserProjectResponse;
 import lombok.RequiredArgsConstructor;
 
-import static com.ljt.study.huafa.enums.PermitRequestEnum.V2_GET_USER_POSITION_LIST;
-import static com.ljt.study.huafa.enums.PermitRequestEnum.V2_GET_USER_PROJECT_BY_PARAM;
+import static com.ljt.study.huafa.enums.PermitRequestEnum.LIST_USER_POSITION;
+import static com.ljt.study.huafa.enums.PermitRequestEnum.LIST_USER_PROJECT;
 
 /**
  * @author LiJingTang
@@ -21,12 +21,12 @@ public class PermitSysApiImpl implements PermitSysApi {
     private final PermitHttpClient client;
 
     @Override
-    public UserPositionResponse getUserPosition(UserPositionRequest request) {
-        return client.execute(V2_GET_USER_POSITION_LIST, request, UserPositionResponse.class);
+    public UserPositionResponse listUserPosition(UserPositionRequest request) {
+        return client.execute(LIST_USER_POSITION, request, UserPositionResponse.class);
     }
 
     @Override
-    public UserProjectResponse getUserProject(UserProjectRequest request) {
-        return client.execute(V2_GET_USER_PROJECT_BY_PARAM, request, UserProjectResponse.class);
+    public UserProjectResponse listUserProject(UserProjectRequest request) {
+        return client.execute(LIST_USER_PROJECT, request, UserProjectResponse.class);
     }
 }

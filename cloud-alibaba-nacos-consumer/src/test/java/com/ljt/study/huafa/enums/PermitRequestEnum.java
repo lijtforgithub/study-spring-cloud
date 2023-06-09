@@ -12,8 +12,8 @@ import org.springframework.http.HttpMethod;
 @AllArgsConstructor
 public enum PermitRequestEnum implements RequestEnum {
 
-    V2_GET_USER_POSITION_LIST("/api/user/v2/getUserPositionList", "用户列表（有岗位的）", HttpMethod.POST),
-    V2_GET_USER_PROJECT_BY_PARAM("/api/v2/getUserProjectByParam", "用户项目（多条件））", HttpMethod.GET);
+    LIST_USER_POSITION("/api/user/v2/getUserPositionList", "用户列表（有岗位的）", HttpMethod.POST),
+    LIST_USER_PROJECT("/api/v2/getUserProjectByParam", "用户项目（多条件））", HttpMethod.GET);
 
     private final String url;
     private final String desc;

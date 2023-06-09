@@ -6,6 +6,7 @@ import com.ljt.study.huafa.client.*;
 import com.ljt.study.huafa.enums.SystemEnum;
 import com.ljt.study.huafa.prop.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,6 +23,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = ClinkProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.clink.url') != null")
     @EnableConfigurationProperties(ClinkProperties.class)
     static class ClinkConfig {
         @Bean
@@ -39,6 +41,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = OAProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.oa.url') != null")
     @EnableConfigurationProperties(OAProperties.class)
     static class OAConfig {
 
@@ -62,6 +65,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = DataProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.data.url') != null")
     @EnableConfigurationProperties(DataProperties.class)
     static class DataConfig {
 
@@ -81,6 +85,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = CustomerProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.customer.url') != null")
     @EnableConfigurationProperties(CustomerProperties.class)
     static class CustomerConfig {
 
@@ -100,6 +105,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = InteractionProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.interaction.url') != null")
     @EnableConfigurationProperties(InteractionProperties.class)
     static class InteractionConfig {
 
@@ -119,6 +125,7 @@ class SystemConfig {
 
     @Configuration
     @ConditionalOnProperty(prefix = PermitProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.permit.url') != null")
     @EnableConfigurationProperties(PermitProperties.class)
     static class PermitConfig {
 

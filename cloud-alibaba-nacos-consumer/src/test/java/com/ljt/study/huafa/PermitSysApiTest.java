@@ -24,19 +24,19 @@ class PermitSysApiTest {
 
 
     @Test
-    void testGetUserPosition() {
+    void listUserPosition() {
         UserPositionRequest request = new UserPositionRequest();
         request.setUserId("000011395");
-        UserPositionResponse response = permitSysApi.getUserPosition(request);
+        UserPositionResponse response = permitSysApi.listUserPosition(request);
 
         log.info(JSON.toJSONString(response));
     }
 
     @Test
-    void testGetUserProject() {
+    void listUserProject() {
         UserProjectRequest request = new UserProjectRequest();
         request.setUserId("000011395");
-        UserProjectResponse response = permitSysApi.getUserProject(request);
+        UserProjectResponse response = permitSysApi.listUserProject(request);
 
         log.info(JSON.toJSONString(response));
     }

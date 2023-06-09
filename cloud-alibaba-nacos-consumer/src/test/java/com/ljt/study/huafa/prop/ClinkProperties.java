@@ -16,6 +16,9 @@ public class ClinkProperties {
     private String url;
     private String accessKeyId;
     private String accessKeySecret;
+    private String businessLine;
+    private String platform;
+    private String publicKey;
 
     private HttpClientProperties httpclient;
 

@@ -33,18 +33,18 @@ class CustomerSysApiTest {
 
 
     @Test
-    void testOwner() {
+    void listIncrOwnerRoom() {
         OwnerIncrRequest request = new OwnerIncrRequest();
         request.setPageNo(10);
         request.setPageSize(10);
 //        OwnerIncrResponse response = customerSysApi.getIncrOwner(request);
-        OwnerIncrResponse response = customerSysApi.getIncrOwnerRoom(request);
+        OwnerIncrResponse response = customerSysApi.listIncrOwnerRoom(request);
 
         log.info(JSON.toJSONString(response));
     }
 
     @Test
-    void testDict() {
+    void getDict() {
         DictResponse response = customerSysApi.getDict(new DictRequest());
 
         log.info(JSON.toJSONString(response));

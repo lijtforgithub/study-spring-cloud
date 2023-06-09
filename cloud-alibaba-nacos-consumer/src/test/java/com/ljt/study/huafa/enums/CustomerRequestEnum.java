@@ -13,8 +13,8 @@ import org.springframework.http.HttpMethod;
 public enum CustomerRequestEnum implements RequestEnum {
 
     GET_DICT_CONFIG("/dict/getCertificateConfig", "查询证件类型", HttpMethod.POST),
-    GET_INCR_OWNER_INFO("/ownerInfo/getIncrementOwnerInfo", "查询增量业主", HttpMethod.POST),
-    GET_INCR_OWNER_ROOM("/ownerInfo/getIncrementOwner", "查询增量业主房客关系", HttpMethod.POST);
+    LIST_INCR_OWNER_INFO("/ownerInfo/getIncrementOwnerInfo", "查询增量业主", HttpMethod.POST),
+    LIST_INCR_OWNER_ROOM("/ownerInfo/getIncrementOwner", "查询增量业主房客关系", HttpMethod.POST);
 
     private final String url;
     private final String desc;

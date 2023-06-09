@@ -27,13 +27,13 @@ class ClinkSysApiTest {
 
 
     @Test
-    void testGetAllCdr() {
+    void listAllCdr() {
         AllCdrRequest request = new AllCdrRequest();
         request.setCno("88888888");
 //        request.setType(1);
         request.setRequestUniqueId("1234");
         request.setBusinessLineAndSystem("test");
-        AllCdrResponse response = clinkSysApi.getAllCdr(request);
+        AllCdrResponse response = clinkSysApi.listAllCdr(request);
 
         log.info(JSON.toJSONString(response));
     }

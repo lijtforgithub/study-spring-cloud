@@ -19,7 +19,7 @@ public class IdmSysApiImpl implements IdmSysApi {
     private IdmPersonService idmPersonService;
 
     @Override
-    public UserResponse getOneById(String uid) {
+    public UserResponse getById(String uid) {
         if (StrUtil.isBlank(uid)) {
             return null;
         }
@@ -27,7 +27,7 @@ public class IdmSysApiImpl implements IdmSysApi {
     }
 
     @Override
-    public UserResponse getOneByUsername(String username) {
+    public UserResponse getByUsername(String username) {
         if (StrUtil.isBlank(username)) {
             return null;
         }

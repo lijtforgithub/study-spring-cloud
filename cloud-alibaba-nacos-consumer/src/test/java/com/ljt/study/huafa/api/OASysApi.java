@@ -1,7 +1,7 @@
 package com.ljt.study.huafa.api;
 
-import com.ljt.study.huafa.dto.oa.request.FlowStartRequest;
-import com.ljt.study.huafa.dto.oa.response.FlowStartResponse;
+import com.ljt.study.huafa.dto.oa.request.StartFlowRequest;
+import com.ljt.study.huafa.dto.oa.response.StartFlowResponse;
 
 /**
  * @author LiJingTang
@@ -9,6 +9,6 @@ import com.ljt.study.huafa.dto.oa.response.FlowStartResponse;
  */
 public interface OASysApi {
 
-    FlowStartResponse startFlow(FlowStartRequest request);
+    StartFlowResponse startFlow(StartFlowRequest request);
 
 }

@@ -12,8 +12,8 @@ import org.springframework.http.HttpMethod;
 @AllArgsConstructor
 public enum OARequestEnum implements RequestEnum {
 
-    FLOW_START("/RESTAdapter/EXT/OA/FlowStart", "发起流程", HttpMethod.POST),
-    FLOW_DETAIL("/RESTAdapter/EXT/OA/FlowGetDetail", "获取流程详情", HttpMethod.POST);
+    START_FLOW("/RESTAdapter/EXT/OA/FlowStart", "发起流程", HttpMethod.POST),
+    GET_FLOW_DETAIL("/RESTAdapter/EXT/OA/FlowGetDetail", "获取流程详情", HttpMethod.POST);
 
     private final String url;
     private final String desc;

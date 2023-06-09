@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  * @date 2023-06-01 16:55
  */
 @Data
-public class SmsQueryRequest extends InteractionBaseRequest {
+public class SmsStatusRequest extends InteractionBaseRequest {
 
     @QueryParam
     @NotBlank(message = "短信流水号不能为空")

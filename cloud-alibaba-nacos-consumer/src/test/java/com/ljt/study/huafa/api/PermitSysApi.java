@@ -11,8 +11,8 @@ import com.ljt.study.huafa.dto.permit.response.UserProjectResponse;
  */
 public interface PermitSysApi {
 
-    UserPositionResponse getUserPosition(UserPositionRequest request);
+    UserPositionResponse listUserPosition(UserPositionRequest request);
 
-    UserProjectResponse getUserProject(UserProjectRequest request);
+    UserProjectResponse listUserProject(UserProjectRequest request);
 
 }

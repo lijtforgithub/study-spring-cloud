@@ -20,13 +20,13 @@ public class CustomerSysApiImpl implements CustomerSysApi {
     private final CustomerHttpClient client;
 
     @Override
-    public OwnerIncrResponse getIncrOwner(OwnerIncrRequest request) {
-        return client.execute(GET_INCR_OWNER_INFO, request, OwnerIncrResponse.class);
+    public OwnerIncrResponse listIncrOwner(OwnerIncrRequest request) {
+        return client.execute(LIST_INCR_OWNER_INFO, request, OwnerIncrResponse.class);
     }
 
     @Override
-    public OwnerIncrResponse getIncrOwnerRoom(OwnerIncrRequest request) {
-        return client.execute(GET_INCR_OWNER_ROOM, request, OwnerIncrResponse.class);
+    public OwnerIncrResponse listIncrOwnerRoom(OwnerIncrRequest request) {
+        return client.execute(LIST_INCR_OWNER_ROOM, request, OwnerIncrResponse.class);
     }
 
     @Override

@@ -9,6 +9,6 @@ import com.ljt.study.huafa.dto.clink.response.AllCdrResponse;
  */
 public interface ClinkSysApi {
 
-    AllCdrResponse getAllCdr(AllCdrRequest request);
+    AllCdrResponse listAllCdr(AllCdrRequest request);
 
 }

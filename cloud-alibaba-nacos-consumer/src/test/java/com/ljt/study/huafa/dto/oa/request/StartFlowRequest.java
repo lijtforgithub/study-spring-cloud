@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2023-05-23 19:07
  */
 @Data
-public class FlowStartRequest extends OABaseRequest {
+public class StartFlowRequest extends OABaseRequest {
 
     /**
      * 来源系统名

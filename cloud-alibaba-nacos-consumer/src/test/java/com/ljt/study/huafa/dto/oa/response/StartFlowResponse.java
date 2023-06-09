@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2023-05-23 19:08
  */
 @Data
-public class FlowStartResponse extends OABaseResponse {
+public class StartFlowResponse extends OABaseResponse {
 
     private String state;
     private String isSuccess;

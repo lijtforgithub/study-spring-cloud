@@ -28,12 +28,12 @@ class IdmSysApiTest {
 
 
     @Test
-    void testIdm() {
-        UserResponse response = idmSysApi.getOneByUsername("ouyangjunjiang");
+    void getByUsername() {
+        UserResponse response = idmSysApi.getByUsername("ouyangjunjiang");
 
         log.info(JSON.toJSONString(response));
 
-        response = idmSysApi.getOneById("000000189");
+        response = idmSysApi.getById("000000189");
 
         log.info(JSON.toJSONString(response));
 

@@ -8,5 +8,5 @@ import lombok.Data;
  * @date 2023-06-04 17:49
  */
 @Data
-public class SmsQueryResponse extends InteractionBaseResponse<String> {
+public class SmsStatusResponse extends InteractionBaseResponse<String> {
 }

@@ -25,7 +25,7 @@ public interface CustomerSysApi {
      * "ownerId":"002fa5fb9db04968bdf4cc075cb4c6a8",
      * "ownerName":"吴彰森"}
      */
-    OwnerIncrResponse getIncrOwner(OwnerIncrRequest request);
+    OwnerIncrResponse listIncrOwner(OwnerIncrRequest request);
 
     /**
      * 查询增量业主房客关系
@@ -47,7 +47,7 @@ public interface CustomerSysApi {
      * "ownerName":"刘艳华",
      * "ownerRel":0}
      */
-    OwnerIncrResponse getIncrOwnerRoom(OwnerIncrRequest request);
+    OwnerIncrResponse listIncrOwnerRoom(OwnerIncrRequest request);
 
     DictResponse getDict(DictRequest request);
 

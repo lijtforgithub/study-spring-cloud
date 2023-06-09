@@ -8,8 +8,8 @@ import com.ljt.study.huafa.dto.idm.response.UserResponse;
  */
 public interface IdmSysApi {
 
-    UserResponse getOneById(String uid);
+    UserResponse getById(String uid);
 
-    UserResponse getOneByUsername(String username);
+    UserResponse getByUsername(String username);
 
 }

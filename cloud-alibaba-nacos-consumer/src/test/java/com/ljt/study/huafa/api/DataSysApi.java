@@ -9,6 +9,6 @@ import com.ljt.study.huafa.dto.data.response.AreaResponse;
  */
 public interface DataSysApi {
 
-    AreaResponse getAreaList(AreaRequest request);
+    AreaResponse listArea(AreaRequest request);
 
 }

@@ -6,7 +6,7 @@ import com.ljt.study.huafa.dto.data.response.AreaResponse;
 import com.ljt.study.huafa.client.DataHttpClient;
 import lombok.RequiredArgsConstructor;
 
-import static com.ljt.study.huafa.enums.DataRequestEnum.GET_AREA_LIST;
+import static com.ljt.study.huafa.enums.DataRequestEnum.LIST_AREA;
 
 /**
  * @author LiJingTang
@@ -18,8 +18,8 @@ public class DataSysApiImpl implements DataSysApi {
     private final DataHttpClient client;
 
     @Override
-    public AreaResponse getAreaList(AreaRequest request) {
-        return client.execute(GET_AREA_LIST, request, AreaResponse.class);
+    public AreaResponse listArea(AreaRequest request) {
+        return client.execute(LIST_AREA, request, AreaResponse.class);
     }
 
 }

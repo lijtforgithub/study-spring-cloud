@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.ljt.study.huafa.dto.GatewayBaseResponse;
 import com.ljt.study.huafa.enums.RequestEnum;
+import com.ljt.study.huafa.exception.ClientException;
 import com.ljt.study.huafa.prop.GatewayProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,29 +18,34 @@ import java.sql.Timestamp;
  */
 abstract class GatewayHttpClient<E extends RequestEnum, T, R extends GatewayBaseResponse<?>> extends BaseHttpClient<E, T, R> {
 
+    private static final String TIMESTAMP = "timestamp";
+    private static final String APP_ID = "appid";
+    private static final String SIGN = "sign";
+
     @Autowired
     private GatewayProperties gatewayProperties;
 
     @Override
     protected HttpHeaders getHttpHeader() {
+
         HttpHeaders headers = super.getHttpHeader();
         String timestamp = new Timestamp(System.currentTimeMillis()).toString();
-        headers.add("timestamp", timestamp);
-        headers.add("appid", gatewayProperties.getAppId());
-        headers.add("sign", createSign(timestamp));
+        headers.add(TIMESTAMP, timestamp);
+        headers.add(APP_ID, gatewayProperties.getAppId());
+        headers.add(SIGN, createSign(timestamp));
         return headers;
     }
 
     @Override
     protected void handleResponse(R resp) {
         super.handleResponse(resp);
-        Assert.isTrue("200".equals(resp.getCode()), () -> new RuntimeException(resp.getMsg()));
+        Assert.isTrue("200".equals(resp.getCode()), () -> new ClientException(resp.getMsg()));
     }
 
     private String createSign(String timestamp) {
         byte[] key = gatewayProperties.getAppSecret().getBytes();
         HMac mac = new HMac(HmacAlgorithm.HmacSHA1, key);
-        String param = String.format("appid=%s&timestamp=%s", gatewayProperties.getAppId(), timestamp);
+        String param = String.format("%s=%s&%s=%s", APP_ID, gatewayProperties.getAppId(), TIMESTAMP, timestamp);
         return mac.digestHex(param);
     }
 

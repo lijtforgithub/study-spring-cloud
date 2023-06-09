@@ -1,104 +1,74 @@
 package com.ljt.study.huafa.client;
 
-import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
+import com.ljt.study.huafa.exception.ClientException;
+import com.ljt.study.huafa.prop.OAProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
-import org.springframework.integration.file.support.FileExistsMode;
-import org.springframework.integration.ftp.session.FtpRemoteFileTemplate;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author LiJingTang
  * @date 2023-05-29 09:59
  */
 @Slf4j
-@AllArgsConstructor
 public class OAFtpClient {
 
-    public boolean upload(String workDir, String filename, InputStream inputStream) {
+    @Autowired
+    private OAProperties oaProperties;
+
+    public boolean upload(String filename, InputStream inputStream) {
         FTPClient client = null;
         try {
             client = getClient();
-            setClient(workDir, client);
             return client.storeFile(filename, inputStream);
         } catch (IOException e) {
-            log.error("上传FTP文件失败：", e);
+            log.error("上传FTP文件失败", e);
+            return false;
         } finally {
             closeClient(client);
         }
-        return false;
     }
 
-
     private void closeClient(FTPClient client) {
-        if (client != null) {
+        if (Objects.nonNull(client)) {
             try {
                 client.disconnect();
             } catch (IOException e) {
-                log.error("关闭ftp失败" + e.getMessage());
+                log.error("关闭FT连接异异常", e);
             }
         }
     }
 
-    public FTPClient getClient() {
+    private FTPClient getClient() {
         FTPSClient client = new FTPSClient("SSL", true);
-        client.setControlEncoding("UTF-8");
+        client.setControlEncoding(StandardCharsets.UTF_8.name());
         client.enterLocalPassiveMode();
+        client.setConnectTimeout(10_000);
+
         try {
-            client.setConnectTimeout(10000);
-            client.connect(ftpConfiguration.getHost(), ftpConfiguration.getPort());
+            client.connect(oaProperties.getFtp().getHost(), oaProperties.getFtp().getPort());
             int replyCode = client.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                throw new BizException("FTP连接失败");
+                throw new ClientException("FTP连接失败");
             }
-            boolean loginSuccess = client.login(ftpConfiguration.getUsername(), ftpConfiguration.getPassword());
-            if (!loginSuccess) {
-                throw new BizException("FTP登录失败");
+            boolean success = client.login(oaProperties.getFtp().getUsername(), oaProperties.getFtp().getPassword());
+            if (!success) {
+                throw new ClientException("FTP登录失败");
             }
+            client.setFileType(FTPClient.BINARY_FILE_TYPE);
+            client.changeWorkingDirectory(oaProperties.getFtp().getWorkDir());
             return client;
         } catch (Exception e) {
-            log.error("FTP操作失败：", e);
-            throw new BizException("FTP操作失败：" + e.getMessage());
+            log.error("创建FTP连接失败", e);
+            throw new ClientException("FTP连接异常：" + e.getMessage());
         }
-    }
-
-    private final FtpRemoteFileTemplate ftpTemplate;
-
-    public boolean upload(MultipartFile file) {
-        Message<MultipartFile> message = MessageBuilder.withPayload(file).build();
-//        boolean flag = messageChannel.send(message);
-        String send = ftpTemplate.send(message, FileExistsMode.REPLACE);
-        log.debug("上传文件{} => {}", file.getOriginalFilename(), send);
-        return true;
-    }
-
-    @SneakyThrows
-    public boolean upload(File file) {
-        boolean flag;
-        try (InputStream inputStream = new FileInputStream(file)){
-            flag = ftpTemplate.execute(session -> {
-                try {
-                    session.write(inputStream, file.getName());
-                    return true;
-                } catch (Exception e) {
-                    return false;
-                }
-            });
-        }
-
-
-        log.debug("上传文件{} => {}", file.getName(), flag);
-        return flag;
     }
 
 }

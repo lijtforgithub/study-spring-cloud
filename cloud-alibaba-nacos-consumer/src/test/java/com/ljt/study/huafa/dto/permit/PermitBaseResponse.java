@@ -8,6 +8,6 @@ import lombok.Data;
  * @date 2023-05-22 15:51
  */
 @Data
-public abstract class PermitBaseResponse<T> extends GatewayBaseResponse<T> {
+public class PermitBaseResponse<T> extends GatewayBaseResponse<T> {
 
 }

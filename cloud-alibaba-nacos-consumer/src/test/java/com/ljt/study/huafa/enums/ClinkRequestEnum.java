@@ -6,14 +6,13 @@ import org.springframework.http.HttpMethod;
 
 /**
  * @author LiJingTang
- * @date 2023-05-22 08:44
+ * @date 2023-06-06 11:43
  */
 @Getter
 @AllArgsConstructor
-public enum InteractionRequestEnum implements RequestEnum {
+public enum ClinkRequestEnum implements RequestEnum {
 
-    SMS_SINGLE("/message/singleSend", "发送单条短信", HttpMethod.POST),
-    SMS_QUERY("/message/messageStatus", "查询短信状态", HttpMethod.POST);
+    GET_ALL_CDR("/list_cdr_all", "查询通话记录列表", HttpMethod.GET);
 
     private final String url;
     private final String desc;

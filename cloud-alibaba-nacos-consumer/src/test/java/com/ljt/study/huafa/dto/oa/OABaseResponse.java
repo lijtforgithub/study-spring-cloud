@@ -7,6 +7,6 @@ import lombok.Data;
  * @date 2023-05-23 19:06
  */
 @Data
-public abstract class OABaseResponse {
+public class OABaseResponse {
 
 }

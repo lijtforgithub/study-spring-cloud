@@ -6,19 +6,11 @@ import com.ljt.study.huafa.client.*;
 import com.ljt.study.huafa.enums.SystemEnum;
 import com.ljt.study.huafa.prop.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.expression.common.LiteralExpression;
-import org.springframework.integration.ftp.session.DefaultFtpsSessionFactory;
-import org.springframework.integration.ftp.session.FtpRemoteFileTemplate;
-
-import java.nio.charset.StandardCharsets;
-
-import static org.apache.commons.net.ftp.FTPClient.PASSIVE_LOCAL_DATA_CONNECTION_MODE;
 
 /**
  * @author LiJingTang
@@ -29,12 +21,26 @@ import static org.apache.commons.net.ftp.FTPClient.PASSIVE_LOCAL_DATA_CONNECTION
 class SystemConfig {
 
     @Configuration
-    @ConditionalOnProperty(prefix = "huafa.oa", value = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = ClinkProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @EnableConfigurationProperties(ClinkProperties.class)
+    static class ClinkConfig {
+        @Bean
+        @ConditionalOnMissingBean
+        ClinkSysApi clinkSysApi() {
+            log.info("加载{}接口", SystemEnum.CLINK.getDesc());
+            return new ClinkSysApiImpl(clinkHttpClient());
+        }
+
+        @Bean
+        ClinkHttpClient clinkHttpClient() {
+            return new ClinkHttpClient();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = OAProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @EnableConfigurationProperties(OAProperties.class)
     static class OAConfig {
-
-        @Autowired
-        private OAProperties oaProperties;
 
         @Bean
         @ConditionalOnMissingBean
@@ -50,34 +56,12 @@ class SystemConfig {
 
         @Bean
         OAFtpClient oaFtpClient() {
-            return new OAFtpClient(oaFtpFileTemplate());
-        }
-
-        @Bean
-        FtpRemoteFileTemplate oaFtpFileTemplate() {
-            FtpRemoteFileTemplate template = new FtpRemoteFileTemplate(oaFtpsSessionFactory());
-            template.setRemoteDirectoryExpression(new LiteralExpression(oaProperties.getFtp().getWorkDir()));
-            return template;
-        }
-
-        @Bean
-        DefaultFtpsSessionFactory oaFtpsSessionFactory() {
-            DefaultFtpsSessionFactory factory = new DefaultFtpsSessionFactory();
-            factory.setHost(oaProperties.getFtp().getHost());
-            factory.setPort(oaProperties.getFtp().getPort());
-            factory.setUsername(oaProperties.getFtp().getUsername());
-            factory.setPassword(oaProperties.getFtp().getPassword());
-            factory.setProtocol("SSL");
-            factory.setImplicit(true);
-            factory.setConnectTimeout(10_000);
-            factory.setControlEncoding(StandardCharsets.UTF_8.name());
-            factory.setClientMode(PASSIVE_LOCAL_DATA_CONNECTION_MODE);
-            return factory;
+            return new OAFtpClient();
         }
     }
 
     @Configuration
-    @ConditionalOnProperty(prefix = "huafa.data", value = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = DataProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @EnableConfigurationProperties(DataProperties.class)
     static class DataConfig {
 
@@ -96,7 +80,7 @@ class SystemConfig {
 
 
     @Configuration
-    @ConditionalOnProperty(prefix = "huafa.customer", value = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CustomerProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @EnableConfigurationProperties(CustomerProperties.class)
     static class CustomerConfig {
 
@@ -115,7 +99,7 @@ class SystemConfig {
 
 
     @Configuration
-    @ConditionalOnProperty(prefix = "huafa.interaction", value = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = InteractionProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @EnableConfigurationProperties(InteractionProperties.class)
     static class InteractionConfig {
 
@@ -134,7 +118,7 @@ class SystemConfig {
 
 
     @Configuration
-    @ConditionalOnProperty(prefix = "huafa.permit", value = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = PermitProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @EnableConfigurationProperties(PermitProperties.class)
     static class PermitConfig {
 

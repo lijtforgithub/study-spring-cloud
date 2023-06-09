@@ -16,6 +16,7 @@ public enum SystemEnum {
     DATA("sys-data", "数仓系统"),
     PERMIT("sys-permit", "权限系统"),
     CUSTOMER("sys-customer", "客户中心"),
+    CLINK("sys-clink", "呼叫中心"),
     INTERACTION("sys-interaction", "交互中心");
 
     private final String name;

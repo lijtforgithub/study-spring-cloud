@@ -11,4 +11,6 @@ public interface InteractionSysApi {
 
     SmsSingleResponse smsSendSingle(SmsSingleRequest request);
 
+    String smsQueryStatus(String appSerialNo);
+
 }

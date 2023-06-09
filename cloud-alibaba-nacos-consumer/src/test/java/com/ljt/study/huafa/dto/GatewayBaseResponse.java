@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2023-05-24 16:48
  */
 @Data
-public abstract class GatewayBaseResponse<T> {
+public class GatewayBaseResponse<T> {
 
     private String code;
     private String msg;

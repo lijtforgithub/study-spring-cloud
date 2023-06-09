@@ -1,5 +1,6 @@
-package com.ljt.study.huafa.dto.customer;
+package com.ljt.study.huafa.dto.customer.response;
 
+import com.ljt.study.huafa.dto.customer.CustomerBaseResponse;
 import lombok.Data;
 
 /**
@@ -7,7 +8,7 @@ import lombok.Data;
  * @date 2023-05-20 14:53
  */
 @Data
-public class Page<T> extends CustomerBaseResponse<T> {
+public class PageResponse<T> extends CustomerBaseResponse<T> {
 
     private Integer pageNumber;
     private Integer pageSize;

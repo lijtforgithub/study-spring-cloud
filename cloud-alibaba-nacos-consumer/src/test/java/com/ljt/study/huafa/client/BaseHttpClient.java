@@ -7,6 +7,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ljt.study.huafa.config.HttpClientConfig;
 import com.ljt.study.huafa.enums.RequestEnum;
 import com.ljt.study.huafa.enums.SystemEnum;
+import com.ljt.study.huafa.exception.ClientException;
 import com.ljt.study.huafa.prop.HttpClientProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.HibernateValidator;
@@ -16,10 +17,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StopWatch;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +29,7 @@ import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
@@ -59,13 +62,6 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         RestTemplate restTemplate = new RestTemplate(clientRequestFactory);
         this.restTemplate = restTemplate;
 
-        if (StrUtil.isNotBlank(getBaseUrl())) {
-            DefaultUriBuilderFactory uriBuilder = new DefaultUriBuilderFactory(getBaseUrl());
-            uriBuilder.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES);
-            restTemplate.setUriTemplateHandler(uriBuilder);
-            log.info("{} 设置前缀地址 {}", getSystem(), getBaseUrl());
-        }
-
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         Iterator<HttpMessageConverter<?>> iterator = messageConverters.iterator();
         if (iterator.hasNext()) {
@@ -80,8 +76,8 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             }
         }
         messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        FastJsonHttpMessageConverter fastJsonMessageConverter = new FastJsonHttpMessageConverter();
-        messageConverters.add(0, fastJsonMessageConverter);
+        FastJsonHttpMessageConverter messageConverter = new FastJsonHttpMessageConverter();
+        messageConverters.add(0, messageConverter);
         log.info("{} 使用fastjson", getSystem());
     }
 
@@ -93,27 +89,27 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             validateParam(requestEnum, req, clazz, stopWatch);
 
             stopWatch.start("封装请求");
-            String url = postUrl(requestEnum.getUrl());
-            Object requestBody = null;
-            if (HttpMethod.GET == requestEnum.getMethod()) {
-                UriComponentsBuilder builder = UriComponentsBuilder.fromPath(url);
-                MultiValueMap<String, String> query = RequestHelper.requestToQuery(req);
-                builder.queryParams(query);
-                url = builder.toUriString();
-            } else {
-                requestBody = getHttpBody(req);
-            }
+            MultiValueMap<String, String> query = initQueryParam(requestEnum, req);
+            URI uri = processQueryParam(requestEnum, query);
+            Object requestBody = processBodyParam(req);
             HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, getHttpHeader());
             stopWatch.stop();
 
             stopWatch.start("发起请求");
-            ResponseEntity<String> str = restTemplate.exchange(url, requestEnum.getMethod(), httpEntity, String.class);
-            ResponseEntity<RP> respEntity = restTemplate.exchange(url, requestEnum.getMethod(), httpEntity, clazz);
+            ResponseEntity<RP> respEntity;
+            try {
+                respEntity = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, clazz);
+            } catch (HttpClientErrorException e) {
+                String msg = e.getResponseBodyAsString();
+                if (StrUtil.isBlank(msg)) {
+                    msg = e.getStatusText();
+                }
+                log.debug("请求异常", e);
+                throw new ClientException(e.getRawStatusCode(), handleHttpError(msg));
+            }
             stopWatch.stop();
 
             stopWatch.start("处理结果");
-            Assert.isTrue(HttpStatus.OK == respEntity.getStatusCode(), () -> new RuntimeException("请求接口失败"));
-
             RP body = respEntity.getBody();
 
             try {
@@ -125,12 +121,11 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
 
             return body;
         } finally {
+            if (stopWatch.isRunning()) {
+                stopWatch.stop();
+            }
             log.info(stopWatch.prettyPrint());
         }
-    }
-
-    protected String postUrl(String url) {
-        return url;
     }
 
     protected HttpHeaders getHttpHeader() {
@@ -139,12 +134,20 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         return headers;
     }
 
-    protected T getHttpBody(T req) {
+    protected URI processQueryParam(E requestEnum, MultiValueMap<String, String> query) {
+        return UriComponentsBuilder.fromHttpUrl(getBaseUrl()).path(requestEnum.getUrl()).queryParams(query).build().toUri();
+    }
+
+    protected T processBodyParam(T req) {
         return req;
     }
 
     protected void handleResponse(R resp) {
-        Assert.notNull(resp, "返回值为空");
+        Assert.notNull(resp, () -> new ClientException("返回值为空"));
+    }
+
+    protected String handleHttpError(String message) {
+        return message;
     }
 
     protected String getBaseUrl() {
@@ -164,8 +167,26 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         stopWatch.stop();
     }
 
+    private MultiValueMap<String, String> initQueryParam(E requestEnum, T req) {
+        MultiValueMap<String, String> query = new LinkedMultiValueMap<>();
+        if (HttpMethod.GET == requestEnum.getMethod()) {
+            MultiValueMap<String, String> map = RequestHelper.requestToQuery(req);
+            if (Objects.nonNull(map)) {
+                query.putAll(map);
+            }
+        } else {
+            MultiValueMap<String, String> map = RequestHelper.requestExtractQuery(req);
+            if (Objects.nonNull(map)) {
+                query.putAll(map);
+            }
+        }
 
-    private static final Validator VALIDATOR = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory().getValidator();
+        return query;
+    }
+
+
+    private static final Validator VALIDATOR = Validation.byProvider(HibernateValidator.class)
+            .configure().failFast(true).buildValidatorFactory().getValidator();
 
     protected static <T> void validateBean(T t) {
         Set<ConstraintViolation<T>> violationSet = VALIDATOR.validate(t);

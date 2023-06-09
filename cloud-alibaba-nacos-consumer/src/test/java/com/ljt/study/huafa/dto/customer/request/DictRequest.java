@@ -5,8 +5,8 @@ import lombok.Data;
 
 /**
  * @author LiJingTang
- * @date 2023-05-29 08:54
+ * @date 2023-06-05 16:07
  */
 @Data
-public class OwnerInfoRequest extends CustomerBaseRequest {
+public class DictRequest extends CustomerBaseRequest {
 }

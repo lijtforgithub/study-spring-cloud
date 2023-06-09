@@ -5,10 +5,14 @@ import com.ljt.study.huafa.dto.data.DataBaseRequest;
 import com.ljt.study.huafa.dto.data.DataBaseResponse;
 import com.ljt.study.huafa.enums.DataRequestEnum;
 import com.ljt.study.huafa.enums.SystemEnum;
+import com.ljt.study.huafa.exception.ClientException;
 import com.ljt.study.huafa.prop.DataProperties;
 import com.ljt.study.huafa.prop.HttpClientProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
+
+import java.net.URI;
 
 /**
  * @author LiJingTang
@@ -16,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 public class DataHttpClient extends BaseHttpClient<DataRequestEnum, DataBaseRequest, DataBaseResponse<?>> {
+
+    private static final String ACCESS_TOKEN = "access_token";
 
     @Autowired
     private DataProperties dataProperties;
@@ -27,15 +33,15 @@ public class DataHttpClient extends BaseHttpClient<DataRequestEnum, DataBaseRequ
 
 
     @Override
-    protected String postUrl(String url) {
-        String param = String.format("access_token=%s", dataProperties.getAccessToken());
-        return url + (url.contains("?") ? "&" : "?") + param;
+    protected URI processQueryParam(DataRequestEnum requestEnum, MultiValueMap<String, String> query) {
+        query.addIfAbsent(ACCESS_TOKEN, dataProperties.getAccessToken());
+        return super.processQueryParam(requestEnum, query);
     }
 
     @Override
     protected void handleResponse(DataBaseResponse<?> resp) {
         super.handleResponse(resp);
-        Assert.isTrue(200 == resp.getResultCode(), () -> new RuntimeException(resp.getResultMsg()));
+        Assert.isTrue(200 == resp.getResultCode(), () -> new ClientException(resp.getResultMsg()));
     }
 
     @Override

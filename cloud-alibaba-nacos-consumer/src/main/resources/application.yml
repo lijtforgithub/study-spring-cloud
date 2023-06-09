@@ -42,12 +42,12 @@ feign:
 huafa:
   # 集团网关
   gateway:
-#    url: https://apitest.huafagroup.com
-#    app-id: gfcsk-dev
-#    app-secret: '05438756'
-    url: https://api.huafagroup.com
-    app-id: gfcsk-pro
-    app-secret: 'ZfYKOEw6'
+    url: https://apitest.huafagroup.com
+    app-id: gfcsk-dev
+    app-secret: '05438756'
+#    url: https://api.huafagroup.com
+#    app-id: gfcsk-pro
+#    app-secret: 'ZfYKOEw6'
   # 数仓系统
   data:
     url: https://apifront.huafagroup.com
@@ -78,3 +78,10 @@ huafa:
     url: ldap://172.16.44.73:1389
     username: 'uid=AUTH_CUSTOMSERVICE,ou=Application,ou=People,o=huafa.com,o=isp'
     password: Huafa2021
+  clink:
+    url: https://clink-openapi-test.cnhuafas.com
+    access-key-id: 9c3f28526078f59c4360bd9a340448d0
+    access-key-secret: QAS3wODO1RJ9w99LYybb
+logging:
+  level:
+    org.apache.http: DEBUG

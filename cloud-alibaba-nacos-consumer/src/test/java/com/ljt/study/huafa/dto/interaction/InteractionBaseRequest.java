@@ -7,5 +7,5 @@ import lombok.Data;
  * @date 2023-05-22 08:42
  */
 @Data
-public abstract class InteractionBaseRequest {
+public class InteractionBaseRequest {
 }

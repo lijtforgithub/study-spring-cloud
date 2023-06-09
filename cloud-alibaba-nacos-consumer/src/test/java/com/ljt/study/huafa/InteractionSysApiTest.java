@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.UUID;
+
 /**
  * @author LiJingTang
  * @date 2023-05-22 09:23
@@ -23,14 +25,26 @@ class InteractionSysApiTest {
 
     @Test
     void testSmsSendSingle() {
+        String uuid = UUID.randomUUID().toString();
+        log.info("短信流水号={}", uuid);
         SmsSingleRequest request = new SmsSingleRequest();
+        request.setAppSerialNo(uuid);
         request.setMobile("15155965310");
-        request.setMessage("{\"roomNum\":\"珠海华发蔚蓝堡（98-108栋）-一期-108栋-1单元-102\",\"url\":\"weixin://dl/business/?t=RBzqXMEPexn\"}");
         request.setCreateId("test");
         request.setTemplateNo("KF_081");
+//        request.setMessage("{\"roomNum\":\"珠海华发蔚蓝堡（98-108栋）-一期-108栋-1单元-102\",\"url\":\"weixin://dl/business/?t=RBzqXMEPexn\"}");
+//        request.setMessage("xxoo");
         SmsSingleResponse response = interactionSysApi.smsSendSingle(request);
 
         log.info(JSON.toJSONString(response));
+    }
+
+    @Test
+    void testSmsQuery() {
+        // 24441e88-7b1f-4387-ae4c-b73a7eb122e5
+        String response = interactionSysApi.smsQueryStatus("24441e88-7b1f-4387-ae4c-b73a7eb122e5");
+
+        log.info(response);
     }
 
 }

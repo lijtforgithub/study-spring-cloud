@@ -10,9 +10,12 @@ import lombok.Data;
 @Data
 public class SmsSingleRequest extends InteractionBaseRequest {
 
-    private String message;
+    private String appSerialNo;
     private String mobile;
     private String createId;
+    private String message;
+    private String content;
     private String templateNo;
+
 
 }

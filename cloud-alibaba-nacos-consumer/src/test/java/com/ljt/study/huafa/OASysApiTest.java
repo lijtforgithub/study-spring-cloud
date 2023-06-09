@@ -18,6 +18,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +63,9 @@ class OASysApiTest {
     }
 
     @Test
-    void testFtp() {
+    void testFtp() throws FileNotFoundException {
         File file = new File("/Users/lijingtang/Documents/test.json");
-        oaFtpClient.upload(file);
+        oaFtpClient.upload(file.getName(), new FileInputStream(file));
     }
 
     public static void main(String[] args) throws JAXBException {

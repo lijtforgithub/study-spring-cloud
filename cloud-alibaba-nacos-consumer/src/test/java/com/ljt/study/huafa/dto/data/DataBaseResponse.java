@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2023-05-21 10:45
  */
 @Data
-public abstract class DataBaseResponse<T> {
+public class DataBaseResponse<T> {
 
     @JSONField(name = "resultcode")
     private int resultCode;

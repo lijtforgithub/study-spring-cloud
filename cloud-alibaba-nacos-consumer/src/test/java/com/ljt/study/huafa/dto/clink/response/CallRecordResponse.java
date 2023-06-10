@@ -1,6 +1,5 @@
 package com.ljt.study.huafa.dto.clink.response;
 
-import com.ljt.study.huafa.dto.clink.ClinkBaseResponse;
 import lombok.Data;
 
 import java.util.List;
@@ -10,20 +9,8 @@ import java.util.List;
  * @date 2023-06-06 11:52
  */
 @Data
-public class CallRecordResponse extends ClinkBaseResponse {
+public class CallRecordResponse extends PageResponse {
 
-    /**
-     * 当前页码
-     */
-    private Integer pageNumber;
-    /**
-     * 一页展示条数
-     */
-    private Integer pageSize;
-    /**
-     * 总条数
-     */
-    private Integer totalCount;
     /**
      * 通话记录列表
      */

@@ -1,4 +1,4 @@
-package com.ljt.study.huafa.dto.clink;
+package com.ljt.study.huafa.dto.clink.response;
 
 import lombok.Data;
 

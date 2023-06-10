@@ -1,6 +1,6 @@
 package com.ljt.study.huafa.exception;
 
-import com.ljt.study.huafa.dto.clink.ResponseError;
+import com.ljt.study.huafa.dto.clink.response.ResponseError;
 import lombok.Getter;
 
 /**

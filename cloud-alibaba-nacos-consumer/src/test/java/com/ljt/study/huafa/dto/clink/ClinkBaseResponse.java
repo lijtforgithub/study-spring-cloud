@@ -1,5 +1,6 @@
 package com.ljt.study.huafa.dto.clink;
 
+import com.ljt.study.huafa.dto.clink.response.ResponseError;
 import lombok.Data;
 
 /**

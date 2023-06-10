@@ -10,13 +10,6 @@ import lombok.Data;
 public class ClinkBaseResponse {
 
     private String requestId;
-    private Error error;
-
-
-    @Data
-    public static class Error {
-        private String code;
-        private String message;
-    }
+    private ResponseError error;
 
 }

@@ -1,6 +1,5 @@
 package com.ljt.study.huafa.client;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -9,8 +8,8 @@ import com.ljt.study.huafa.enums.RequestEnum;
 import com.ljt.study.huafa.enums.SystemEnum;
 import com.ljt.study.huafa.exception.ClientException;
 import com.ljt.study.huafa.prop.HttpClientProperties;
+import com.ljt.study.huafa.util.ValidatorUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.HibernateValidator;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -26,15 +25,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author LiJingTang
@@ -96,22 +91,17 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             stopWatch.stop();
 
             stopWatch.start("发起请求");
-            ResponseEntity<RP> respEntity;
+            RP body = null;
             try {
-                respEntity = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, clazz);
+                ResponseEntity<RP> respEntity = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, clazz);
+                body = respEntity.getBody();
             } catch (HttpClientErrorException e) {
-                String msg = e.getResponseBodyAsString();
-                if (StrUtil.isBlank(msg)) {
-                    msg = e.getStatusText();
-                }
-                log.debug("请求异常", e);
-                throw new ClientException(e.getRawStatusCode(), handleHttpError(msg));
+                log.info("请求异常", e);
+                handleHttpError(e);
             }
             stopWatch.stop();
 
             stopWatch.start("处理结果");
-            RP body = respEntity.getBody();
-
             try {
                 handleResponse((R) body);
             } catch (ClassCastException e) {
@@ -146,8 +136,9 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         Assert.notNull(resp, () -> new ClientException("返回值为空"));
     }
 
-    protected String handleHttpError(String message) {
-        return message;
+    protected void handleHttpError(HttpClientErrorException e) {
+        String msg = StrUtil.blankToDefault(e.getResponseBodyAsString(), e.getStatusText());
+        throw new ClientException(e.getRawStatusCode(), msg);
     }
 
     protected String getBaseUrl() {
@@ -163,7 +154,7 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         Assert.notNull(requestEnum, "请求枚举为空");
         Assert.notNull(req, "请求入参为空");
         Assert.notNull(clazz, "返回值类型为空");
-        validateBean(req);
+        ValidatorUtils.validateBean(req);
         stopWatch.stop();
     }
 
@@ -182,18 +173,6 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         }
 
         return query;
-    }
-
-
-    private static final Validator VALIDATOR = Validation.byProvider(HibernateValidator.class)
-            .configure().failFast(true).buildValidatorFactory().getValidator();
-
-    protected static <T> void validateBean(T t) {
-        Set<ConstraintViolation<T>> violationSet = VALIDATOR.validate(t);
-        if (CollUtil.isNotEmpty(violationSet)) {
-            ConstraintViolation<T> violation = violationSet.iterator().next();
-            throw new IllegalArgumentException(violation.getMessage());
-        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ljt.study.huafa.client;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.alibaba.fastjson.JSON;
@@ -10,6 +11,7 @@ import com.ljt.study.huafa.enums.ClinkRequestEnum;
 import com.ljt.study.huafa.enums.RequestEnum;
 import com.ljt.study.huafa.enums.SystemEnum;
 import com.ljt.study.huafa.exception.ClientException;
+import com.ljt.study.huafa.exception.ClinkClientException;
 import com.ljt.study.huafa.prop.ClinkProperties;
 import com.ljt.study.huafa.prop.HttpClientProperties;
 import lombok.Data;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -65,14 +68,20 @@ public class ClinkHttpClient extends BaseHttpClient<ClinkRequestEnum, ClinkBaseR
     }
 
     @Override
-    protected String handleHttpError(String message) {
-        System.out.println(message);
-        try {
-            ClinkBaseResponse response = JSON.parseObject(message, ClinkBaseResponse.class);
-            return response.getError().getMessage();
-        } catch (JSONException e) {
-            return message;
+    protected void handleHttpError(HttpClientErrorException e) {
+        String message = e.getResponseBodyAsString();
+        if (StrUtil.isNotBlank(message)) {
+            try {
+                ClinkBaseResponse response = JSON.parseObject(message, ClinkBaseResponse.class);
+                if (Objects.nonNull(response.getError())) {
+                    throw new ClinkClientException(e.getRawStatusCode(), message, response.getError());
+                }
+            } catch (JSONException ex) {
+                log.warn(ex.getMessage());
+            }
         }
+
+        super.handleHttpError(e);
     }
 
     @Override

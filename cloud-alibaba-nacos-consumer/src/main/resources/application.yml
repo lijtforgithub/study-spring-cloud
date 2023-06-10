@@ -87,4 +87,4 @@ huafa:
     public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQshUQsZR2UvrbGtloEVH9IqhqTZk58UT3lUS2/7k8geEWOsvPOI9w8i5YmxiKRDyP3rPU7fq9VCFgnbYn8LX8CAwEAAQ==
 #logging:
 #  level:
-#    org.apache.http: DEBUG
+#    com.ljt.study.huafa: DEBUG

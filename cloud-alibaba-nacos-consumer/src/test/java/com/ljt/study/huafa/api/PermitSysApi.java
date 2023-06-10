@@ -11,6 +11,9 @@ import com.ljt.study.huafa.dto.permit.response.UserProjectResponse;
  */
 public interface PermitSysApi {
 
+    /**
+     * 用户岗位（按客户端）
+     */
     UserPositionResponse listUserPosition(UserPositionRequest request);
 
     UserProjectResponse listUserProject(UserProjectRequest request);

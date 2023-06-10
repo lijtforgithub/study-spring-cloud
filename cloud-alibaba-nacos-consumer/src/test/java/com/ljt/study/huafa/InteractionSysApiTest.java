@@ -33,7 +33,7 @@ class InteractionSysApiTest {
         request.setCreateId("test");
         request.setTemplateNo("KF_081");
 //        request.setMessage("{\"roomNum\":\"珠海华发蔚蓝堡（98-108栋）-一期-108栋-1单元-102\",\"url\":\"weixin://dl/business/?t=RBzqXMEPexn\"}");
-//        request.setMessage("xxoo");
+        request.setMessage("xxoo");
         SmsSingleResponse response = interactionSysApi.sendSingleSms(request);
 
         log.info(JSON.toJSONString(response));

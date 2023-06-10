@@ -27,7 +27,6 @@ abstract class GatewayHttpClient<E extends RequestEnum, T, R extends GatewayBase
 
     @Override
     protected HttpHeaders getHttpHeader() {
-
         HttpHeaders headers = super.getHttpHeader();
         String timestamp = new Timestamp(System.currentTimeMillis()).toString();
         headers.add(TIMESTAMP, timestamp);

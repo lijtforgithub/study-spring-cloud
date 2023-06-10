@@ -49,6 +49,9 @@ public interface CustomerSysApi {
      */
     OwnerIncrResponse listIncrOwnerRoom(OwnerIncrRequest request);
 
+    /**
+     * 数据字典
+     */
     DictResponse getDict(DictRequest request);
 
 }

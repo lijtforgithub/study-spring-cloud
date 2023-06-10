@@ -2,6 +2,7 @@ package com.ljt.study.huafa.client;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ljt.study.huafa.config.HttpClientConfig;
 import com.ljt.study.huafa.enums.RequestEnum;
@@ -93,8 +94,9 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             stopWatch.start("发起请求");
             RP body = null;
             try {
-                ResponseEntity<RP> respEntity = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, clazz);
-                body = respEntity.getBody();
+                // 返回String类型再反序列化 用于解决返回空串到对象的异常问题
+                ResponseEntity<String> response = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, String.class);
+                body = JSON.parseObject(response.getBody(), clazz);
             } catch (HttpClientErrorException e) {
                 log.info("请求异常", e);
                 handleHttpError(e);

@@ -2,12 +2,12 @@ package com.ljt.study.huafa;
 
 import com.alibaba.fastjson.JSON;
 import com.ljt.study.huafa.api.ClinkSysApi;
+import com.ljt.study.huafa.dto.clink.ClinkBaseResponse;
 import com.ljt.study.huafa.dto.clink.request.*;
-import com.ljt.study.huafa.dto.clink.response.CallRecordResponse;
-import com.ljt.study.huafa.dto.clink.response.ClientDetailResponse;
 import com.ljt.study.huafa.dto.clink.response.ClinkLoginResponse;
 import com.ljt.study.huafa.prop.ClinkProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,14 +30,19 @@ class ClinkSysApiTest {
     @Autowired
     private ClinkProperties clinkProperties;
 
+    private ClinkBaseResponse response;
+
+    @AfterEach
+    void afterEach() {
+        log.info(JSON.toJSONString(response));
+    }
+
 
     @Test
     void getClientDetail() {
         ClientDetailRequest request = new ClientDetailRequest();
         request.setUsername("xianbinrong");
-        ClientDetailResponse response = clinkSysApi.getClientDetail(request);
-
-        log.info(JSON.toJSONString(response));
+        response = clinkSysApi.getClientDetail(request);
     }
 
     @Test
@@ -57,9 +62,7 @@ class ClinkSysApiTest {
 //        request.setBusinessLineAndSystem(clinkProperties.getBusinessLine());
         request.setStartTime(1652584100L);
         request.setEndTime(1654873700L);
-        CallRecordResponse response = clinkSysApi.listCallRecord(request);
-
-        log.info(JSON.toJSONString(response));
+        response = clinkSysApi.listCallRecord(request);
     }
 
     @Test

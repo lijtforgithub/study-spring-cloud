@@ -2,14 +2,14 @@ package com.ljt.study.huafa;
 
 import com.alibaba.fastjson.JSON;
 import com.ljt.study.huafa.api.DataSysApi;
-import com.ljt.study.huafa.dto.data.request.AreaRequest;
-import com.ljt.study.huafa.dto.data.response.AreaResponse;
+import com.ljt.study.huafa.dto.data.DataBaseRequest;
+import com.ljt.study.huafa.dto.data.DataBaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
 
 /**
  * @author LiJingTang
@@ -22,16 +22,65 @@ class DataSysApiTest {
     @Autowired
     private DataSysApi dataSysApi;
 
+    private DataBaseRequest request;
+    private DataBaseResponse<?> response;
+
+    @BeforeEach
+    void beforeEach() {
+        request = new DataBaseRequest();
+        request.setPageNo(1);
+        request.setPageSize(10);
+    }
+
+    @AfterEach
+    void afterEach() {
+        log.info(JSON.toJSONString(response));
+    }
+
 
     @Test
-    void listArea() {
-        AreaRequest request = new AreaRequest();
-        request.setUpdateDate(LocalDate.now().minusDays(1));
-        request.setPageNo(1);
-        request.setPageSize(3);
-        AreaResponse response = dataSysApi.listArea(request);
+    void listAreaCompany() {
+        response = dataSysApi.listAreaCompany(request);
+    }
 
-        log.info(JSON.toJSONString(response));
+    @Test
+    void listCityCompany() {
+        response = dataSysApi.listCityCompany(request);
+    }
+
+    @Test
+    void listProject() {
+        response = dataSysApi.listProject(request);
+    }
+
+    @Test
+    void listStage() {
+        response = dataSysApi.listStage(request);
+    }
+
+    @Test
+    void listBuilding() {
+        response = dataSysApi.listBuilding(request);
+    }
+
+    @Test
+    void listBuildingUnit() {
+        response = dataSysApi.listBuildingUnit(request);
+    }
+
+    @Test
+    void listHouse() {
+        response = dataSysApi.listHouse(request);
+    }
+
+    @Test
+    void listHouseSale() {
+        response = dataSysApi.listHouseSale(request);
+    }
+
+    @Test
+    void listProductType() {
+        response = dataSysApi.listProductType(request);
     }
 
 }

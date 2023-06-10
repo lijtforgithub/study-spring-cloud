@@ -10,26 +10,32 @@ import java.util.List;
  * @date 2023-05-22 15:54
  */
 @Data
-public class UserPositionResponse extends PermitBaseResponse<List<UserPositionResponse>> {
+public class UserPositionResponse extends PermitBaseResponse<List<UserPositionResponse.UserPosition>> {
 
-    /**
-     * 岗位ID
-     */
-    private String positionId;
 
-    /**
-     * 岗位名称
-     */
-    private String positionName;
+    @Data
+    public static class UserPosition {
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+        /**
+         * 岗位ID
+         */
+        private String positionId;
 
-    /**
-     * 用户名称
-     */
-    private String userName;
+        /**
+         * 岗位名称
+         */
+        private String positionName;
+
+        /**
+         * 用户ID
+         */
+        private String userId;
+
+        /**
+         * 用户名称
+         */
+        private String userName;
+
+    }
 
 }

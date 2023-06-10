@@ -1,7 +1,6 @@
 package com.ljt.study.huafa.api;
 
 import com.ljt.study.huafa.dto.interaction.request.SmsSingleRequest;
-import com.ljt.study.huafa.dto.interaction.response.SmsSingleResponse;
 
 /**
  * @author LiJingTang
@@ -11,8 +10,10 @@ public interface InteractionSysApi {
 
     /**
      * 发送单条短信
+     *
+     * @return 发送状态 SENDING-发送中
      */
-    SmsSingleResponse sendSingleSms(SmsSingleRequest request);
+    String sendSingleSms(SmsSingleRequest request);
 
     /**
      * 查询短信发送状态

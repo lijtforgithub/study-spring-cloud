@@ -1,9 +1,7 @@
 package com.ljt.study.huafa;
 
-import com.alibaba.fastjson.JSON;
 import com.ljt.study.huafa.api.InteractionSysApi;
 import com.ljt.study.huafa.dto.interaction.request.SmsSingleRequest;
-import com.ljt.study.huafa.dto.interaction.response.SmsSingleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +30,17 @@ class InteractionSysApiTest {
         request.setMobile("15155965310");
         request.setCreateId("test");
         request.setTemplateNo("KF_081");
-//        request.setMessage("{\"roomNum\":\"珠海华发蔚蓝堡（98-108栋）-一期-108栋-1单元-102\",\"url\":\"weixin://dl/business/?t=RBzqXMEPexn\"}");
-        request.setMessage("xxoo");
-        SmsSingleResponse response = interactionSysApi.sendSingleSms(request);
+        request.setMessage("{\"roomNum\":\"珠海华发蔚蓝堡（98-108栋）-一期-108栋-1单元-102\",\"url\":\"weixin://dl/business/?t=RBzqXMEPexn\"}");
+//        request.setMessage("xxoo");
+        String response = interactionSysApi.sendSingleSms(request);
 
-        log.info(JSON.toJSONString(response));
+        log.info(response);
     }
 
     @Test
     void getSmsStatus() {
         // 24441e88-7b1f-4387-ae4c-b73a7eb122e5
-        String response = interactionSysApi.getSmsStatus("24441e88-7b1f-4387-ae4c-b73a7eb122e5");
+        String response = interactionSysApi.getSmsStatus("3374bfee-4a27-4db7-998a-150833034a5d");
 
         log.info(response);
     }

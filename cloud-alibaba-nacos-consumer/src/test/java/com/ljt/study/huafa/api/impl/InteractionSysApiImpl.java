@@ -28,14 +28,14 @@ public class InteractionSysApiImpl implements InteractionSysApi {
     private final InteractionHttpClient client;
 
     @Override
-    public SmsSingleResponse sendSingleSms(SmsSingleRequest request) {
+    public String sendSingleSms(SmsSingleRequest request) {
         SmsSingleResponse response = client.execute(SEND_SINGLE_SMS, request, SmsSingleResponse.class);
         Assert.isTrue(StrUtil.isBlank(response.getMsg()), () -> {
             log.warn("{} => {}", response.getMsg(), response.getData());
             return new ClientException(response.getMsg());
         });
 
-        return response;
+        return handData(response.getData());
     }
 
     @Override
@@ -43,8 +43,12 @@ public class InteractionSysApiImpl implements InteractionSysApi {
         SmsStatusRequest request = new SmsStatusRequest();
         request.setAppSerialNo(appSerialNo);
         SmsStatusResponse response = client.execute(GET_SMS_STATUS, request, SmsStatusResponse.class);
-        String data = response.getData();
-        if ("null".equals(data)) {
+
+        return handData(response.getData());
+    }
+
+    private String handData(String data) {
+        if (StrUtil.isBlank(data) || "null".equals(data)) {
             return null;
         }
 

@@ -9,9 +9,15 @@ import java.util.List;
  * @date 2023-05-20 14:51
  */
 @Data
-public class OwnerIncrResponse extends PageResponse<OwnerIncrResponse> {
+public class OwnerIncrResponse extends PageResponse<OwnerIncrResponse.OwnerIncr> {
 
-    private List<Owner> lists;
+
+    @Data
+    public static class OwnerIncr {
+
+        private List<Owner> lists;
+
+    }
 
 
     @Data

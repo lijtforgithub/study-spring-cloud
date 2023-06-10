@@ -10,10 +10,15 @@ import java.util.List;
  * @date 2023-06-05 16:04
  */
 @Data
-public class DictResponse extends CustomerBaseResponse<List<DictResponse>> {
+public class DictResponse extends CustomerBaseResponse<List<DictResponse.Dict>> {
 
-    private String itemName;
-    private String itemValue;
-    private Integer status;
+    @Data
+    public static class Dict {
+
+        private String itemName;
+        private String itemValue;
+        private Integer status;
+
+    }
 
 }

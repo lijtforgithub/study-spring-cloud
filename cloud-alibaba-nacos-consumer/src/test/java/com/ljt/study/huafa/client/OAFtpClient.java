@@ -1,5 +1,6 @@
 package com.ljt.study.huafa.client;
 
+import cn.hutool.core.lang.Assert;
 import com.ljt.study.huafa.exception.ClientException;
 import com.ljt.study.huafa.prop.OAProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -22,6 +24,23 @@ public class OAFtpClient {
 
     @Autowired
     private OAProperties oaProperties;
+
+    public boolean batchUpload(Map<String, InputStream> fileMap) {
+        FTPClient client = null;
+        try {
+            client = getClient();
+            for (Map.Entry<String, InputStream> entry : fileMap.entrySet()) {
+                boolean success = client.storeFile(entry.getKey(), entry.getValue());
+                Assert.isTrue(success, () -> new IOException(entry.getKey()));
+            }
+            return true;
+        } catch (IOException e) {
+            log.error("上传FTP文件失败", e);
+            return false;
+        } finally {
+            closeClient(client);
+        }
+    }
 
     public boolean upload(String filename, InputStream inputStream) {
         FTPClient client = null;

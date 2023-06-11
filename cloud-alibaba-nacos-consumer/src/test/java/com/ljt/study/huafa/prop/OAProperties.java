@@ -2,7 +2,6 @@ package com.ljt.study.huafa.prop;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author LiJingTang

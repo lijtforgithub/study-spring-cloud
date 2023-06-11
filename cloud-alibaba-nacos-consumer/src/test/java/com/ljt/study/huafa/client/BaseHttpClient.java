@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ljt.study.huafa.config.HttpClientConfig;
+import com.ljt.study.huafa.dto.NonJSON;
 import com.ljt.study.huafa.enums.RequestEnum;
 import com.ljt.study.huafa.enums.SystemEnum;
 import com.ljt.study.huafa.exception.ClientException;
@@ -15,7 +16,6 @@ import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,8 +26,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -60,19 +63,20 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
 
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         Iterator<HttpMessageConverter<?>> iterator = messageConverters.iterator();
-        if (iterator.hasNext()) {
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        while (iterator.hasNext()) {
             HttpMessageConverter<?> converter = iterator.next();
-            // 原有的String是ISO-8859-1编码 去掉
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                supportedMediaTypes.addAll(converter.getSupportedMediaTypes());
+                iterator.remove();
+            }
             if (converter instanceof StringHttpMessageConverter) {
                 iterator.remove();
             }
-            // 由于系统中默认有jackson 在转换json时自动会启用  但是我们不想使用它 可以直接移除或者将fastjson放在首位
-            if (converter instanceof GsonHttpMessageConverter || converter instanceof MappingJackson2HttpMessageConverter) {
-                iterator.remove();
-            }
         }
-        messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
         FastJsonHttpMessageConverter messageConverter = new FastJsonHttpMessageConverter();
+        messageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
         messageConverters.add(0, messageConverter);
         log.info("{} 使用fastjson", getSystem());
     }
@@ -96,14 +100,15 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
             try {
                 // 返回String类型再反序列化 用于解决返回空串到对象的异常问题
                 ResponseEntity<String> response = restTemplate.exchange(uri, requestEnum.getMethod(), httpEntity, String.class);
-                body = JSON.parseObject(response.getBody(), clazz);
+                stopWatch.stop();
+
+                stopWatch.start("处理结果");
+                body = handleBody(clazz, response);
             } catch (HttpClientErrorException e) {
                 log.info("请求异常", e);
                 handleHttpError(e);
             }
-            stopWatch.stop();
 
-            stopWatch.start("处理结果");
             try {
                 handleResponse((R) body);
             } catch (ClassCastException e) {
@@ -175,6 +180,22 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         }
 
         return query;
+    }
+
+    private <RP> RP handleBody(Class<RP> clazz, ResponseEntity<String> response) {
+        NonJSON annotation = clazz.getAnnotation(NonJSON.class);
+        if (Objects.isNull(annotation)) {
+            return JSON.parseObject(response.getBody(), clazz);
+        } else {
+            try {
+                Constructor<RP> constructor = clazz.getConstructor(String.class);
+                return constructor.newInstance(response.getBody());
+            } catch (NoSuchMethodException e) {
+                throw new ClientException(clazz.getName() + " 不存在只有一个String类型入参的构造方法");
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new ClientException(e.getMessage());
+            }
+        }
     }
 
 }

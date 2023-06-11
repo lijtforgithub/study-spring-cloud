@@ -13,7 +13,8 @@ import org.springframework.http.HttpMethod;
 public enum OARequestEnum implements RequestEnum {
 
     START_FLOW("/RESTAdapter/EXT/OA/FlowStart", "发起流程", HttpMethod.POST),
-    GET_FLOW_DETAIL("/RESTAdapter/EXT/OA/FlowGetDetail", "获取流程详情", HttpMethod.POST);
+    GET_FLOW_DETAIL("/RESTAdapter/EXT/OA/FlowGetDetail", "获取流程详情", HttpMethod.POST),
+    GET_FLOW_STATUS("/RESTAdapter/EXT/OA/FlowGetStatus", "获取流程状态", HttpMethod.POST);
 
     private final String url;
     private final String desc;

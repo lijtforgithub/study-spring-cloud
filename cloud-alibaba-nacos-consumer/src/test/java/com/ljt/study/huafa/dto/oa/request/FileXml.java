@@ -12,10 +12,9 @@ import java.util.List;
 @Data
 @XmlRootElement(name = "files")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlFileDTO {
+public class FileXml {
 
     private List<XmlUrl> urls;
-
 
 
     @Data
@@ -30,6 +29,5 @@ public class XmlFileDTO {
         private String value;
 
     }
-
 
 }

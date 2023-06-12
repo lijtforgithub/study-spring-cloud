@@ -8,9 +8,9 @@ import com.ljt.study.huafa.api.OASysApi;
 import com.ljt.study.huafa.client.OAFtpClient;
 import com.ljt.study.huafa.client.OAHttpClient;
 import com.ljt.study.huafa.dto.oa.request.FlowDetailRequest;
+import com.ljt.study.huafa.dto.oa.request.FlowFileXml;
 import com.ljt.study.huafa.dto.oa.request.StartFlowRequest;
 import com.ljt.study.huafa.dto.oa.request.StartFlowSimpleRequest;
-import com.ljt.study.huafa.dto.oa.request.FileXml;
 import com.ljt.study.huafa.dto.oa.response.FlowDetailResponse;
 import com.ljt.study.huafa.dto.oa.response.FlowStatusResponse;
 import com.ljt.study.huafa.dto.oa.response.StartFlowResponse;
@@ -23,11 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -116,23 +113,18 @@ public class OASysApiImpl implements OASysApi {
     }
 
     private static String getXmlString(Map<String, String> map) {
-        List<FileXml.XmlUrl> list = new ArrayList<>();
+        List<FlowFileXml.XmlUrl> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            FileXml.XmlUrl xml = new FileXml.XmlUrl();
+            FlowFileXml.XmlUrl xml = new FlowFileXml.XmlUrl();
             xml.setValue(entry.getKey());
             xml.setName(entry.getValue());
             list.add(xml);
         }
 
         try {
-            FileXml fileXml = new FileXml();
+            FlowFileXml fileXml = new FlowFileXml();
             fileXml.setUrls(list);
-            JAXBContext context = JAXBContext.newInstance(FileXml.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(fileXml, writer);
-            return writer.toString();
+            return fileXml.toXml().replaceAll(" {4}", "").replaceAll("\n", "");
         } catch (JAXBException e) {
             throw new ClientException(e.getMessage());
         }

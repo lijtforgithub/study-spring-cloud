@@ -3,15 +3,17 @@ package com.ljt.study.huafa;
 import com.alibaba.fastjson.JSON;
 import com.ljt.study.huafa.api.OASysApi;
 import com.ljt.study.huafa.client.OAFtpClient;
+import com.ljt.study.huafa.dto.oa.request.FlowFileXml;
+import com.ljt.study.huafa.dto.oa.request.FlowFormXml;
 import com.ljt.study.huafa.dto.oa.request.StartFlowRequest;
 import com.ljt.study.huafa.dto.oa.request.StartFlowSimpleRequest;
-import com.ljt.study.huafa.dto.oa.request.FileXml;
 import com.ljt.study.huafa.dto.oa.response.FlowDetailResponse;
 import com.ljt.study.huafa.dto.oa.response.FlowStatusResponse;
 import com.ljt.study.huafa.dto.oa.response.StartFlowResponse;
 import com.ljt.study.huafa.ldap.idm.service.IdmPersonService;
 import com.ljt.study.huafa.prop.OAProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,13 +22,13 @@ import org.springframework.util.DigestUtils;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -108,25 +110,53 @@ class OASysApiTest {
     }
 
     public static void main(String[] args) throws JAXBException {
-        FileXml fileDTO = new FileXml();
-        FileXml.XmlUrl url1 = new FileXml.XmlUrl();
+        FlowFormXml formXml = new FlowFormXml();
+        FlowFormXml.Field field1 = new FlowFormXml.Field();
+        field1.setId("0023");
+        FlowFormXml.Field field2 = new FlowFormXml.Field();
+        field2.setId("0024");
+        field2.setValue("2022-05-25 15:11:05");
+        formXml.setFieldList(Lists.newArrayList(field1, field2));
+
+        FlowFormXml.FormSon formSon = new FlowFormXml.FormSon();
+        FlowFormXml.Son son1 = new FlowFormXml.Son();
+        son1.setId("36776");
+        FlowFormXml.Field field3 = new FlowFormXml.Field();
+        field3.setId("0035");
+        field3.setValue("报修工单");
+        FlowFormXml.Field field4 = new FlowFormXml.Field();
+        field4.setId("0037");
+        field4.setValue("BX220517035546");
+        son1.setFieldList(Lists.newArrayList(field3, field4));
+        FlowFormXml.Son son2 = new FlowFormXml.Son();
+        son2.setId("36777");
+        FlowFormXml.Field field5 = new FlowFormXml.Field();
+        field5.setId("0044");
+        field5.setValue("中建四局第一建设有限公司");
+        FlowFormXml.Field field6 = new FlowFormXml.Field();
+        field6.setId("0046");
+        field6.setValue("1000001084");
+        son2.setFieldList(Lists.newArrayList(field5, field6));
+        formSon.setSonList(Lists.newArrayList(son1, son2));
+        formXml.setSonList(Lists.newArrayList(formSon));
+        log.info("{}", formXml.toXml());
+
+
+        FlowFileXml fileXml = new FlowFileXml();
+        FlowFileXml.XmlUrl url1 = new FlowFileXml.XmlUrl();
         url1.setName("file1");
         url1.setValue("http://f1");
-        FileXml.XmlUrl url2 = new FileXml.XmlUrl();
+        FlowFileXml.XmlUrl url2 = new FlowFileXml.XmlUrl();
         url2.setName("file2");
         url2.setValue("http://f2");
+        fileXml.setUrls(Lists.newArrayList(url1, url2));
 
-        List<FileXml.XmlUrl> urls = new ArrayList<>();
-        urls.add(url1);
-        urls.add(url2);
-        fileDTO.setUrls(urls);
-
-        JAXBContext context = JAXBContext.newInstance(fileDTO.getClass());
+        JAXBContext context = JAXBContext.newInstance(fileXml.getClass());
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         StringWriter writer = new StringWriter();
-        marshaller.marshal(fileDTO, writer);
-        System.out.println(writer.toString());
+        marshaller.marshal(fileXml, writer);
+        log.info("{}", writer.toString().replaceAll(" {4}", "").replaceAll("\n", ""));
     }
 
 }

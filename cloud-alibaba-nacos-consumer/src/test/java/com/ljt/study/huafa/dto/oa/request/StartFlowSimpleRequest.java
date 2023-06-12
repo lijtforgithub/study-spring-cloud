@@ -3,6 +3,7 @@ package com.ljt.study.huafa.dto.oa.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -40,12 +41,12 @@ public class StartFlowSimpleRequest {
     /**
      * 流程表单数据
      */
-    @NotBlank(message = "流程表单数据不能为空")
-    private String formData;
+    @NotNull(message = "流程表单数据不能为空")
+    private FlowFormXml flowForm;
 
     /**
      * 流程附件
      */
-    private Map<String, InputStream> formFile;
+    private Map<String, InputStream> flowFile;
 
 }

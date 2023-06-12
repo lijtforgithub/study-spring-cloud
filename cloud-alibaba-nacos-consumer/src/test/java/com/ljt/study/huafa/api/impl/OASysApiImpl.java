@@ -46,7 +46,7 @@ public class OASysApiImpl implements OASysApi {
     @Override
     public StartFlowResponse startFlow(StartFlowSimpleRequest request) {
         ValidatorUtils.validateBean(request);
-        String fileData = getFileData(request.getFormFile());
+        String fileData = getFileData(request.getFlowFile());
 
         StartFlowRequest req = new StartFlowRequest();
         req.setSystemName(oaProperties.getSystemName());
@@ -55,7 +55,7 @@ public class OASysApiImpl implements OASysApi {
         req.setAuthCode(generateAuthCode(req.getSystemName(), request.getLoginName()));
         req.setFlowCode(request.getFlowCode());
         req.setSubject(request.getSubject());
-        req.setDatas(request.getFormData());
+        req.setDatas(request.getFlowForm().toXml());
         req.setFiles(fileData);
         req.setSendState("0");
         req.setVersion("IDM");

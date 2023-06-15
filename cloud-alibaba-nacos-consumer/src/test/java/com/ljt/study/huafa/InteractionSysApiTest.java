@@ -26,7 +26,7 @@ class InteractionSysApiTest {
         String uuid = UUID.randomUUID().toString();
         log.info("短信流水号={}", uuid);
         SmsSingleRequest request = new SmsSingleRequest();
-        request.setAppSerialNo(uuid);
+        request.setAppSerialNo("3374bfee-4a27-4db7-998a-150833034a5d");
         request.setMobile("15155965310");
         request.setCreateId("test");
         request.setTemplateNo("KF_081");

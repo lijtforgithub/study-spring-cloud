@@ -13,7 +13,6 @@ public interface CustomerSysApi {
 
     /**
      * 查询增量业主
-     *
      * {"address":"",
      * "certNumber":"413027197212231435",
      * "certTypeId":"1023001",
@@ -29,7 +28,6 @@ public interface CustomerSysApi {
 
     /**
      * 查询增量业主房客关系
-     *
      * {"address":"无",
      * "certNumber":"210281198111218825",
      * "certTypeId":"1023001",

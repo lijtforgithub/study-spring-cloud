@@ -8,8 +8,14 @@ import com.ljt.study.huafa.dto.idm.response.UserResponse;
  */
 public interface IdmSysApi {
 
+    /**
+     * 根据ID查询用户
+     */
     UserResponse getById(String uid);
 
+    /**
+     * 根据账号查询账户
+     */
     UserResponse getByUsername(String username);
 
 }

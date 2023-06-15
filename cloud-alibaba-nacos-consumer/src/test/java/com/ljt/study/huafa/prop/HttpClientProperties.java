@@ -16,7 +16,7 @@ public class HttpClientProperties {
     private Integer socketTimeout = 100_000;
     private Integer connectTimeout = 30_000;
     private Integer connectionRequestTimeout = 30_000;
-    private Integer maxConnPerRoute = 30;
-    private Integer maxConnTotal = 100;
+    private Integer maxConnPerRoute = 20;
+    private Integer maxConnTotal = 200;
 
 }

@@ -78,6 +78,11 @@ huafa:
     url: ldap://172.16.44.73:1389
     username: 'uid=AUTH_CUSTOMSERVICE,ou=Application,ou=People,o=huafa.com,o=isp'
     password: Huafa2021
+  # 华发+
+  mpm:
+    url: https://test.mp.cnhuafag.com:4443
+    sys-key:
+    secret: 
   clink:
     url: https://clink-openapi-test.cnhuafas.com
     access-key-id: 9c3f28526078f59c4360bd9a340448d0

@@ -29,7 +29,7 @@ class DataSysApiTest {
     void beforeEach() {
         request = new DataBaseRequest();
         request.setPageNo(1);
-        request.setPageSize(10);
+//        request.setPageSize(10);
     }
 
     @AfterEach

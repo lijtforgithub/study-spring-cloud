@@ -12,6 +12,7 @@ import lombok.Getter;
 public enum SystemEnum {
 
     IDM("sys-idm", "IDM系统"),
+    MPM("sys-mpm", "华发+"),
     OA("sys-oa", "OA系统"),
     DATA("sys-data", "数仓系统"),
     PERMIT("sys-permit", "权限系统"),

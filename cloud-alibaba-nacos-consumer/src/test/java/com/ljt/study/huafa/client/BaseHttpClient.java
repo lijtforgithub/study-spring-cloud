@@ -162,6 +162,7 @@ abstract class BaseHttpClient<E extends RequestEnum, T, R> {
         Assert.notNull(req, "请求入参为空");
         Assert.notNull(clazz, "返回值类型为空");
         ValidatorUtils.validateBean(req);
+        RequestHelper.checkRequest(req);
         stopWatch.stop();
     }
 

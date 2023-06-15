@@ -1,16 +1,27 @@
 package com.ljt.study.huafa.client;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.ljt.study.huafa.dto.QueryParam;
+import com.ljt.study.huafa.exception.ClientException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ResolvableType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ReflectionUtils;
 
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.BiConsumer;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -20,16 +31,23 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RequestHelper {
 
+    private static final String SERIAL_VERSION_UID = "serialVersionUID";
+
+    private static final Cache<Class<?>, Map<String, Field>> FIELD_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build();
+    private static final Cache<Class<?>, Map<String, Field>> FIELD_QUERY_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build();
+
     public static MultiValueMap<String, String> requestToQuery(Object request) {
         if (Objects.isNull(request)) {
             return null;
         }
 
-        BiConsumer<Field, Map<String, Field>> consumer = (field, fieldMap) -> {
-            fieldMap.put(field.getName(), field);
-        };
-
-        return getQueryMap(request, consumer);
+        return getQueryMap(request, getField(request.getClass()));
     }
 
     public static MultiValueMap<String, String> requestExtractQuery(Object request) {
@@ -43,21 +61,20 @@ public class RequestHelper {
             return requestToQuery(request);
         }
 
-        BiConsumer<Field, Map<String, Field>> consumer = (field, fieldMap) -> {
-            QueryParam anno = field.getAnnotation(QueryParam.class);
-            if (Objects.nonNull(anno)) {
-                fieldMap.put(StrUtil.blankToDefault(anno.value(), field.getName()), field);
-            }
-        };
+        Map<String, Field> fieldMap = getField(clazz);
+        Map<String, Field> map = getField(clazz);
 
-        return getQueryMap(request, consumer);
+        fieldMap.forEach((k, v) -> {
+            QueryParam anno = v.getAnnotation(QueryParam.class);
+            if (Objects.nonNull(anno)) {
+                map.put(StrUtil.blankToDefault(anno.value(), v.getName()), v);
+            }
+        });
+
+        return getQueryMap(request, map);
     }
 
-    private static MultiValueMap<String, String> getQueryMap(Object request, BiConsumer<Field, Map<String, Field>> consumer) {
-        Map<String, Field> fieldMap = new HashMap<>();
-        ReflectionUtils.doWithFields(request.getClass(), field -> consumer.accept(field, fieldMap));
-        Field.setAccessible(fieldMap.values().toArray(new Field[0]), true);
-
+    private static MultiValueMap<String, String> getQueryMap(Object request, Map<String, Field> fieldMap) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         fieldMap.forEach((k, v) -> {
             try {
@@ -76,6 +93,50 @@ public class RequestHelper {
             }
         });
         return map;
+    }
+
+    private static Map<String, Field> getField(Class<?> clazz) {
+        try {
+            return FIELD_CACHE.get(clazz, () -> {
+                Map<String, Field> fieldMap = new HashMap<>();
+                ReflectionUtils.doWithFields(clazz, field -> fieldMap.putIfAbsent(field.getName(), field));
+                fieldMap.remove(SERIAL_VERSION_UID);
+                Field.setAccessible(fieldMap.values().toArray(new Field[0]), true);
+                return fieldMap;
+            });
+        } catch (ExecutionException e) {
+            log.warn("获取类字段信息异常", e);
+            return Collections.emptyMap();
+        }
+    }
+
+    private static final Set<Class<?>> UN_SUPPORT_TYPE = Sets.newHashSet(File.class, InputStream.class, Field.class, Method.class);
+    private static final Predicate<Class<?>> PREDICATE = clazz -> {
+        boolean array = clazz.isArray();
+        if (array) {
+            return true;
+        }
+
+        return UN_SUPPORT_TYPE.stream().anyMatch(type -> type.isAssignableFrom(clazz));
+    };
+
+    public static void checkRequest(Object req) {
+        if (Objects.isNull(req)) {
+            return;
+        }
+        Map<String, Field> fieldMap = getField(req.getClass());
+        for (Field field : fieldMap.values()) {
+            Class<?> type = field.getType();
+            Assert.isFalse(PREDICATE.test(type), "不支持类型：" + type.getName());
+
+            if (!Collection.class.isAssignableFrom(type)) {
+                continue;
+            }
+
+            ResolvableType resolvableType = ResolvableType.forField(field).as(Collection.class);
+            Class<?> cls = resolvableType.getGeneric().resolve();
+            Assert.isFalse(Objects.nonNull(cls) && PREDICATE.test(cls), () -> new ClientException("不支持类型：" + (cls.isArray() ? "数组" : cls.getName())));
+        }
     }
 
 }

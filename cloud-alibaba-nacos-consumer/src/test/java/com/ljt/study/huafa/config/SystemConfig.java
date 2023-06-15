@@ -22,6 +22,18 @@ import org.springframework.context.annotation.Configuration;
 class SystemConfig {
 
     @Configuration
+    @ConditionalOnProperty(prefix = MpmProperties.PREFIX, value = "enabled", matchIfMissing = true)
+    @ConditionalOnExpression("environment.getProperty('huafa.mpm.url') != null")
+    @EnableConfigurationProperties(MpmProperties.class)
+    static class MpmConfig {
+
+        @Bean
+        MpmHttpClient mpmHttpClient() {
+            return new MpmHttpClient();
+        }
+    }
+
+    @Configuration
     @ConditionalOnProperty(prefix = ClinkProperties.PREFIX, value = "enabled", matchIfMissing = true)
     @ConditionalOnExpression("environment.getProperty('huafa.clink.url') != null")
     @EnableConfigurationProperties(ClinkProperties.class)

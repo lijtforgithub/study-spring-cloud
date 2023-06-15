@@ -81,8 +81,9 @@ huafa:
   # 华发+
   mpm:
     url: https://test.mp.cnhuafag.com:4443
-    sys-key:
-    secret: 
+    sys-key: test1
+    secret: abcd1234
+    access-token:
   clink:
     url: https://clink-openapi-test.cnhuafas.com
     access-key-id: 9c3f28526078f59c4360bd9a340448d0

@@ -18,7 +18,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.100.100:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: admin
     hikari:
@@ -39,58 +39,3 @@ spring:
 feign:
   okhttp:
     enabled: true
-huafa:
-  # 集团网关
-  gateway:
-    url: https://apitest.huafagroup.com
-    app-id: gfcsk-dev
-    app-secret: '05438756'
-#    url: https://api.huafagroup.com
-#    app-id: gfcsk-pro
-#    app-secret: 'ZfYKOEw6'
-  # 数仓系统
-  data:
-    url: https://apifront.huafagroup.com
-    access-token: cb8VEz5aztFp62LvTvYv5yFIMgMoy9Qt93RjBwIuMe8
-  # 客户中心
-  customer:
-    url: ${huafa.gateway.url}/gf-customer-center-service
-  # 交互中心
-  interaction:
-    url: ${huafa.gateway.url}/gf-interaction-service
-  # 权限
-  permit:
-    url: ${huafa.gateway.url}/gf-market-permit-service
-  # oa
-  oa:
-    url: http://172.16.51.15:50000
-    username: PIUSER4OA
-    password: oa12345678
-    #系统标志
-    system-name: kfs
-    ftp:
-      host: 172.16.28.30
-      port: 990
-      username: gfoa
-      password: Huafa@gfoa
-      work-dir: /OA_KF_TEST
-  idm:
-    url: ldap://172.16.44.73:1389
-    username: 'uid=AUTH_CUSTOMSERVICE,ou=Application,ou=People,o=huafa.com,o=isp'
-    password: Huafa2021
-  # 华发+
-  mpm:
-    url: https://test.mp.cnhuafag.com:4443
-    sys-key: test1
-    secret: abcd1234
-    access-token:
-  clink:
-    url: https://clink-openapi-test.cnhuafas.com
-    access-key-id: 9c3f28526078f59c4360bd9a340448d0
-    access-key-secret: QAS3wODO1RJ9w99LYybb
-    business-line: KFX
-    platform: KFXT
-    public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQshUQsZR2UvrbGtloEVH9IqhqTZk58UT3lUS2/7k8geEWOsvPOI9w8i5YmxiKRDyP3rPU7fq9VCFgnbYn8LX8CAwEAAQ==
-#logging:
-#  level:
-#    com.ljt.study.huafa: DEBUG

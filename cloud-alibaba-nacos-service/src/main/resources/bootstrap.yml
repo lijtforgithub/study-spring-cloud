@@ -10,5 +10,6 @@ spring:
         shared-configs:
           - dataId: application.yml
             refresh: true
-            # 和应用名一样的文件默认加载且可热更新
+            # 和应用名一样的文件默认加载且可热更新 次版本bug spring.application.name必须配置到bootstrap.yml中 否则在这里明确指定配置文件
+            # PropertySourceBootstrapConfiguration : Located property source: [BootstrapPropertySource {name='bootstrapProperties-alibaba-nacos-service-dev.yml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-alibaba-nacos-service.yml,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-alibaba-nacos-service,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-application.yml,DEFAULT_GROUP'}]
 #          - dataId: ${spring.application.name}.yml

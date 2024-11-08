@@ -16,3 +16,4 @@
 *.tar.gz
 *.rar
 *.db
+.DS_Store

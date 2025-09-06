@@ -1,0 +1,8 @@
+spring:
+  config:
+    import:
+      - nacos:cloud-boot3.yml
+  cloud:
+    nacos:
+      config:
+        server-addr: http://127.0.0.1:8848

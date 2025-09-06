@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cloud-boot3
+  profiles:
+    active: local
+  cloud:
+    nacos:
+      config:
+        server-addr: http://127.0.0.1:8848
+        file-extension: yml
+logging:
+  level:
+    root: info
